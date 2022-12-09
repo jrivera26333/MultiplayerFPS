@@ -46,6 +46,16 @@ void AFPSCharacter::BeginPlay()
 	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
+void AFPSCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (Weapon != nullptr)
+	{
+		Weapon->Destroy();
+	}
+}
+
 void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -175,11 +185,9 @@ void AFPSCharacter::ClientPlaySound2D_Implementation(USoundBase* Sound)
 void AFPSCharacter::ApplyDamage(float Damage, AFPSCharacter* DamageCauser)
 {
 	if (IsDead())
+	{
 		return;
-
-	// Deduct the armor and the health
-
-	ArmorAbsorbDamage(Damage);
+	}
 
 	RemoveHealth(Damage);
 

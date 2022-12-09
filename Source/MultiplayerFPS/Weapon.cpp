@@ -127,12 +127,13 @@ void AWeapon::FireHitscan(FVector FireLocation, FVector FireDirection)
 
 	AFPSCharacter* HitCharacter = Cast<AFPSCharacter>(Hit.Actor.Get());
 
+	MulticastHitEmitter(Hit.ImpactPoint);
+
 	if (HitCharacter != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Character!"));
 		HitCharacter->ApplyDamage(HitscanDamage, Character);
 	}
-
-	MulticastHitEmitter(Hit.ImpactPoint);
 }
 
 void AWeapon::MulticastMuzzleEmitter_Implementation()

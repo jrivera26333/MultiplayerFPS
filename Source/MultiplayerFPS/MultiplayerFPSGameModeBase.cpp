@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Engine/Public/TimerManager.h"
+#include "FPSPlayerStart.h"
 
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 {
@@ -31,14 +32,16 @@ void AMultiplayerFPSGameModeBase::GetFarthestPlayerStart()
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 {
-	TSubclassOf<APlayerStart> PlayerStart = APlayerStart::StaticClass();
+	TSubclassOf<AFPSPlayerStart> PlayerStart = AFPSPlayerStart::StaticClass();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerStart, PlayerStarts);
+
+	UE_LOG(LogTemp, Warning, TEXT("Starts: %s"), *FString::FromInt(PlayerStarts.Num()));
 }
 
 bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
 {
 	// We want to spawn at a random location, not always in the same starting spot
-	return false;
+	return true;
 }
 
 /// <summary>
@@ -126,10 +129,9 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		{
 			KillerPlayerState->AddKill();
 
-			UE_LOG(LogTemp, Warning, TEXT("Set!"));
-
 			//Used to find the farthest away spawn point
 			LastKnownKiller = KillerPlayerState->GetPawn();
+
 			UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *LastKnownKiller->GetName());
 		}
 
@@ -165,7 +167,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		{
 			//Gets the farthest SpawnPoint
 			BubbleSortPlayerStarts(LastKnownKiller);
-
 			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[0]);
 		}
 	}
@@ -196,12 +197,12 @@ void AMultiplayerFPSGameModeBase::BubbleSortPlayerStarts(AActor* const &Killer)
 
 AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
-	auto RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
+	//auto RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 
 	//while (SpawnedIndexes.Contains(RandomIndex))
 	//{
 	//	RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 	//}
 
-	return PlayerStarts[RandomIndex];
+	return PlayerStarts[0];
 }
