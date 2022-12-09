@@ -1,0 +1,207 @@
+#include "MultiplayerFPSGameModeBase.h"
+#include "FPSPlayerState.h"
+#include "FPSGameState.h"
+#include "FPSCharacter.h"
+#include "FPSPlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "Engine/Public/TimerManager.h"
+
+AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
+{
+	DefaultPawnClass = AFPSCharacter::StaticClass();
+	PlayerControllerClass = AFPSPlayerController::StaticClass();
+	PlayerStateClass = AFPSPlayerState::StaticClass();
+	GameStateClass = AFPSGameState::StaticClass();
+
+	CurrentGameState = GetGameState<AFPSGameState>();
+	FindPlayerStarts();
+}
+
+void AMultiplayerFPSGameModeBase::GetFarthestPlayerStart()
+{
+	if (CurrentGameState->PlayerArray.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Could not find Players"));
+		return;
+	}
+	else
+		UE_LOG(LogTemp, Warning, TEXT("Players Found: %s"), *FString::FromInt(CurrentGameState->PlayerArray.Num()));
+}
+
+void AMultiplayerFPSGameModeBase::FindPlayerStarts()
+{
+	TSubclassOf<APlayerStart> PlayerStart = APlayerStart::StaticClass();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerStart, PlayerStarts);
+}
+
+bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
+{
+	// We want to spawn at a random location, not always in the same starting spot
+	return false;
+}
+
+/// <summary>
+/// The reason for setting the KillLimit on the GameState is because it can be easily accessed to Clients. In our case the widget.
+/// </summary>
+void AMultiplayerFPSGameModeBase::HandleMatchHasStarted()
+{
+	Super::HandleMatchHasStarted();
+
+	// Tell the kill limit to the game state
+
+	AFPSGameState* FPSGameState = Cast<AFPSGameState>(GameState);
+
+	if (FPSGameState != nullptr)
+	{
+		FPSGameState->SetKillLimit(KillLimit);
+	}
+}
+
+void AMultiplayerFPSGameModeBase::HandleMatchHasEnded()
+{
+	Super::HandleMatchHasEnded();
+
+	TArray<AActor*> PlayerControllers;
+
+	UGameplayStatics::GetAllActorsOfClass(this, AFPSPlayerController::StaticClass(), PlayerControllers);
+
+	for (AActor* PlayerController : PlayerControllers)
+	{
+		AFPSPlayerController* FPSPlayerController = Cast<AFPSPlayerController>(PlayerController);
+
+		if (FPSPlayerController == nullptr)
+			continue;
+
+		APawn* Pawn = FPSPlayerController->GetPawn();
+
+		if (Pawn != nullptr)
+		{
+			Pawn->Destroy();
+		}
+
+		FPSPlayerController->ClientShowScoreboard();
+	}
+
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMultiplayerFPSGameModeBase::RestartMap, 5.0f);
+}
+
+bool AMultiplayerFPSGameModeBase::ReadyToEndMatch_Implementation()
+{
+	return HasWinner();
+}
+
+bool AMultiplayerFPSGameModeBase::HasWinner() const
+{
+	// Go through the player states and check if any of the players have reached the kill limit
+
+	for (APlayerState* PlayerState : GameState->PlayerArray)
+	{
+		AFPSPlayerState* FPSPlayerState = Cast<AFPSPlayerState>(PlayerState);
+
+		if (FPSPlayerState != nullptr && FPSPlayerState->GetKills() == KillLimit)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AController* VictimController)
+{
+	if (!IsMatchInProgress())
+	{
+		return;
+	}
+
+	// Add kill to the killer
+
+	if (KillerController != nullptr && KillerController != VictimController)
+	{
+		AFPSPlayerState* KillerPlayerState = Cast<AFPSPlayerState>(KillerController->PlayerState);
+
+		if (KillerPlayerState != nullptr)
+		{
+			KillerPlayerState->AddKill();
+
+			UE_LOG(LogTemp, Warning, TEXT("Set!"));
+
+			//Used to find the farthest away spawn point
+			LastKnownKiller = KillerPlayerState->GetPawn();
+			UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *LastKnownKiller->GetName());
+		}
+
+		// Show the kill on the killer's HUD
+
+		AFPSPlayerController* KillerFPSController = Cast<AFPSPlayerController>(KillerController);
+
+		if (KillerFPSController != nullptr && VictimController != nullptr && VictimController->PlayerState != nullptr)
+		{
+			KillerFPSController->ClientNotifyKill(VictimController->PlayerState->GetPlayerName());
+		}
+	}
+
+	// Add death to the victim
+
+	if (VictimController != nullptr)
+	{
+		AFPSPlayerState* VictimPlayerState = Cast<AFPSPlayerState>(VictimController->PlayerState);
+
+		if (VictimPlayerState != nullptr)
+		{
+			VictimPlayerState->AddDeath();
+		}
+
+		APawn* Pawn = VictimController->GetPawn();
+
+		if (Pawn != nullptr)
+		{
+			Pawn->Destroy();
+		}
+
+		if (!HasWinner())
+		{
+			//Gets the farthest SpawnPoint
+			BubbleSortPlayerStarts(LastKnownKiller);
+
+			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[0]);
+		}
+	}
+}
+
+void AMultiplayerFPSGameModeBase::RestartMap()
+{
+	GetWorld()->ServerTravel(GetWorld()->GetName(), false, false);
+}
+
+void AMultiplayerFPSGameModeBase::BubbleSortPlayerStarts(AActor* const &Killer)
+{
+	for (int i = 0; i < PlayerStarts.Num() - 1; i++)
+	{
+		for (int j = 0; j < PlayerStarts.Num(); j++)
+		{
+			AActor* temp;
+
+			if (FVector::Distance(Killer->GetActorLocation(), PlayerStarts[i]->GetActorLocation()) > FVector::Distance(Killer->GetActorLocation(), PlayerStarts[j]->GetActorLocation()))
+			{
+				temp = PlayerStarts[i];
+				PlayerStarts[i] = PlayerStarts[j];
+				PlayerStarts[j] = temp;
+			}
+		}
+	}
+}
+
+AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+{
+	auto RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
+
+	//while (SpawnedIndexes.Contains(RandomIndex))
+	//{
+	//	RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
+	//}
+
+	return PlayerStarts[RandomIndex];
+}
