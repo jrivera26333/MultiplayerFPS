@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	class UParticleSystem* MuzzleFlash;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	class UParticleSystem* HitFlash;
+
 	FTimerHandle FireTimer;
 
 	bool bWantsFire;
@@ -89,7 +92,10 @@ protected:
 	float GetCurrentAmmo() const { return CurrentAmmo; };
 
 	UFUNCTION(NetMulticast, Unreliable)
-	void MulticastSpawnEmitter();
+	void MulticastMuzzleEmitter();
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void MulticastHitEmitter(FVector PointOfImpact);
 
 	bool HasEnoughAmmo();
 

@@ -67,7 +67,10 @@ void AWeapon::StartFire()
 		Character->MulticastPlayAnimMontage(FireAnimMontage);
 	}
 
-	MulticastSpawnEmitter();
+	if (MuzzleFlash != nullptr)
+	{
+		MulticastMuzzleEmitter();
+	}
 
 	//Schedule the FireTimer depending on the value of the FireMode
 
@@ -128,13 +131,23 @@ void AWeapon::FireHitscan(FVector FireLocation, FVector FireDirection)
 	{
 		HitCharacter->ApplyDamage(HitscanDamage, Character);
 	}
+
+	MulticastHitEmitter(Hit.ImpactPoint);
 }
 
-void AWeapon::MulticastSpawnEmitter_Implementation()
+void AWeapon::MulticastMuzzleEmitter_Implementation()
 {
 	if (MuzzleFlash != nullptr)
 	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("Muzzle"));
+	}
+}
+
+void AWeapon::MulticastHitEmitter_Implementation(FVector PointOfImpact)
+{
+	if (HitFlash != nullptr)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFlash, PointOfImpact);
 	}
 }
 
