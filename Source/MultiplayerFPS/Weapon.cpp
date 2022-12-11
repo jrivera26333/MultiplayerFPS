@@ -11,8 +11,6 @@ AWeapon::AWeapon()
 	RootComponent = Mesh;
 
 	bReplicates = true;
-
-	PrimaryActorTick.bCanEverTick = false;
 }
 
 void AWeapon::BeginPlay()

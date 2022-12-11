@@ -167,7 +167,7 @@ void AFPSCharacter::AddWeapon(TSubclassOf<AWeapon> DesiredWeaponClass)
 	}
 
 	//We are attaching it and since its Replicated it will attach to Mesh
-	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "GripPoint");
+	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "NormalGunPosition");
 }
 
 void AFPSCharacter::MulticastPlayAnimMontage_Implementation(UAnimMontage* AnimMontage)
