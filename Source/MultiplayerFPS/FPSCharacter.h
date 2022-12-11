@@ -10,7 +10,7 @@
 #include "FPSCharacter.generated.h"
 
 UCLASS()
-class MULTIPLAYERFPS_API AFPSCharacter : public ACharacter, public ICharacterSetupInterface
+class MULTIPLAYERFPS_API AFPSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -108,11 +108,6 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	AWeapon* GetWeapon() const { return Weapon; };
-	
-	// Interface
-
-	UFUNCTION()
-	virtual void SecondaryAbility(){UE_LOG(LogTemp, Warning, TEXT("Ability not set")) };
 
 public:
 

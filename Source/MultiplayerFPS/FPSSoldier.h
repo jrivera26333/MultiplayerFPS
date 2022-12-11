@@ -22,7 +22,7 @@ protected:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Soldier")
 	float AmountOfDamage = 5.f;
 
-	virtual void SecondaryAbility() override;
+	void SecondaryAbility();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	float SecondaryAbilityFireRate = 3.0f;

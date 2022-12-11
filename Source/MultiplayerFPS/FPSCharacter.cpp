@@ -67,8 +67,6 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::OnPressedFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AFPSCharacter::OnReleasedFire);
 
-	PlayerInputComponent->BindAction("Secondary Ability", IE_Pressed, this, &AFPSCharacter::SecondaryAbility);
-
 	PlayerInputComponent->BindAction("Scoreboard", IE_Pressed, this, &AFPSCharacter::OnPressedScoreboard);
 
 	// Bind the axis mappings

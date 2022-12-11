@@ -17,19 +17,21 @@ class MULTIPLAYERFPS_API AFPSMachineGunSoldier : public AFPSCharacter
 protected:
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Soldier")
-		float MissleCoolDown = 5.f;
+	float MissleCoolDown = 5.f;
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Soldier")
-		float AmountOfDamage = 5.f;
-
-	virtual void SecondaryAbility() override;
+	float AmountOfDamage = 5.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
-		float SecondaryAbilityFireRate = 3.0f;
+	float SecondaryAbilityFireRate = 3.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UAnimSequence* SprintAnimation;
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
 
 	FTimerHandle FireTimer;
-
-	void FireRocket();
+	void Sprint(float Value);
 };
