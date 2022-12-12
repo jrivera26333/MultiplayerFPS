@@ -17,6 +17,8 @@ void AFPSPlayerController::BeginPlay()
 	if (PlayerMenu != nullptr)
 	{
 		PlayerMenu->AddToViewport(0);
+		AddAbilityPortraits();
+		AddWeaponPortrait();
 	}
 }
 
@@ -43,5 +45,27 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 	if (PlayerMenu != nullptr)
 	{
 		PlayerMenu->SetScoreboardVisibility(true);
+	}
+}
+
+void AFPSPlayerController::AddAbilityPortraits()
+{
+	if (Abilities.Num() > 0)
+	{
+		//TODO: Research for leak
+		for (FAbilitySets Ability : Abilities)
+		{
+			PlayerMenu->SetAbilityIcons(Ability.AbilityInput, Ability.AbilityTexture);
+			UE_LOG(LogTemp, Warning, TEXT("Created!"));
+		}
+	}
+}
+
+void AFPSPlayerController::AddWeaponPortrait()
+{
+	if (WeaponPortrait != nullptr)
+	{
+		PlayerMenu->SetWeaponPortrait(WeaponPortrait);
+		UE_LOG(LogTemp, Warning, TEXT("Weapon Set"));
 	}
 }

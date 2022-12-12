@@ -3,7 +3,6 @@
 
 #include "FPSMachineGunSoldier.h"
 #include "Animation/AnimSequence.h"
-#include "Net/UnrealNetwork.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 const float MAX_WALK_SPEED = 600.f;
@@ -18,9 +17,6 @@ void AFPSMachineGunSoldier::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetActorTickEnabled(true);
-	bAllowTickBeforeBeginPlay = true;
-
 	CharacterMovementComp = GetCharacterMovement();
 
 	if (HasAuthority())
@@ -32,26 +28,6 @@ void AFPSMachineGunSoldier::BeginPlay()
 		}
 	}
 }
-
-void AFPSMachineGunSoldier::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if (HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Server: Speed: %f"), CharacterMovementComp->MaxWalkSpeed);
-	}
-	else
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Client: Speed"));
-		UE_LOG(LogTemp, Warning, TEXT("Client: Speed: %f"), CharacterMovementComp->MaxWalkSpeed);
-	}
-}
-
-//void AFPSMachineGunSoldier::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
-//{
-//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-//}
 
 void AFPSMachineGunSoldier::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

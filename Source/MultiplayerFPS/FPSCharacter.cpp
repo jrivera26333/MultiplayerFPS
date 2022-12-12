@@ -39,7 +39,6 @@ void AFPSCharacter::BeginPlay()
 	}
 
 	SetHealth(MaxHealth);
-
 	AddWeapon(WeaponClass);
 	UE_LOG(LogTemp, Warning, TEXT("Weapon: %s"), *WeaponClass);
 
@@ -180,6 +179,7 @@ void AFPSCharacter::ClientPlaySound2D_Implementation(USoundBase* Sound)
 	UGameplayStatics::PlaySound2D(GetWorld(), Sound);
 }
 
+//Remember the FireHitScan is a server call that is calling this function which removes the health which then gets replicated to the client
 void AFPSCharacter::ApplyDamage(float Damage, AFPSCharacter* DamageCauser)
 {
 	if (IsDead())
@@ -200,6 +200,7 @@ void AFPSCharacter::ApplyDamage(float Damage, AFPSCharacter* DamageCauser)
 	{
 		if (GameMode != nullptr)
 		{
+			//Since we are already on the server this GameMode will be valid
 			GameMode->OnKill(DamageCauser->GetController(), GetController());
 		}
 	}

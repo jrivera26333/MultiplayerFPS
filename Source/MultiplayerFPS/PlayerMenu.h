@@ -19,4 +19,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void NotifyKill(const FString& Name);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetAbilityIcons(FString const& AbilityInput, UTexture2D* const& AbilityTexture);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetWeaponPortrait(UTexture2D* const& AbilityTexture);
 };

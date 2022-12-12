@@ -127,6 +127,7 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 
 		if (KillerPlayerState != nullptr)
 		{
+			//Stats are can be added as a Player State. However its not unheard of assigning them in the GameState as well for all Widgets to easily handle
 			KillerPlayerState->AddKill();
 
 			//Used to find the farthest away spawn point
