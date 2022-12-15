@@ -41,7 +41,7 @@ void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
 {
 	// We want to spawn at a random location, not always in the same starting spot
-	return true;
+	return false;
 }
 
 /// <summary>

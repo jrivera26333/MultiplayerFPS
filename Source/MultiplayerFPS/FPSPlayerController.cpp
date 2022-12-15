@@ -12,6 +12,8 @@ void AFPSPlayerController::BeginPlay()
 		return;		
 	}
 	
+	UE_LOG(LogTemp, Warning, TEXT("Created Controller"));
+
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
 	if (PlayerMenu != nullptr)
@@ -67,5 +69,14 @@ void AFPSPlayerController::AddWeaponPortrait()
 	{
 		PlayerMenu->SetWeaponPortrait(WeaponPortrait);
 		UE_LOG(LogTemp, Warning, TEXT("Weapon Set"));
+	}
+}
+
+void AFPSPlayerController::ResetPlayerReference()
+{
+	if (PlayerMenu != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SetCharacterReference called"));
+		PlayerMenu->SetCharacterReference();
 	}
 }

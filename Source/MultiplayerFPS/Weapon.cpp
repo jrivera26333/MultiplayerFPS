@@ -156,6 +156,8 @@ void AWeapon::ReloadWeapon()
 	CurrentAmmo = AmmoClipSize;
 	ServerReload();
 
+
+	UE_LOG(LogTemp, Warning, TEXT("Current Ammo: %f"), CurrentAmmo);
 	//We had the IsReloading here however we are firing the weapon on the server so the bool was only getting changed on the client, so we added it to the ServerReload RPC
 }
 

@@ -33,6 +33,7 @@ void AFPSCharacter::BeginPlay()
 
 	UGameplayStatics::PlaySound2D(GetWorld(), SpawnSound);
 
+	//!Server
 	if (!HasAuthority())
 	{
 		return;		
@@ -40,7 +41,6 @@ void AFPSCharacter::BeginPlay()
 
 	SetHealth(MaxHealth);
 	AddWeapon(WeaponClass);
-	UE_LOG(LogTemp, Warning, TEXT("Weapon: %s"), *WeaponClass);
 
 	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
 }
@@ -81,7 +81,6 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(AFPSCharacter, Health, COND_OwnerOnly);
-	DOREPLIFETIME_CONDITION(AFPSCharacter, Armor, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(AFPSCharacter, Weapon, COND_OwnerOnly);
 }
 
@@ -108,11 +107,9 @@ void AFPSCharacter::OnReleasedFire()
 
 void AFPSCharacter::OnPressedScoreboard()
 {
-	AFPSPlayerController* PlayerController = Cast<AFPSPlayerController>(GetController());
-
-	if (PlayerController != nullptr)
+	if (LocalFPSController != nullptr)
 	{
-		PlayerController->ToggleScoreboard();
+		LocalFPSController->ToggleScoreboard();
 	}
 }
 
@@ -134,20 +131,6 @@ void AFPSCharacter::OnAxisLookUp(float Value)
 void AFPSCharacter::OnAxisTurn(float Value)
 {
 	AddControllerYawInput(Value);
-}
-
-void AFPSCharacter::ArmorAbsorbDamage(float& Damage)
-{
-	// Calculate how much damage was absorbed and subtract that from the Armor
-
-	const float AbsorbedDamage = Damage * ArmorAbsorption;
-	const float RemainingArmor = Armor - AbsorbedDamage;
-
-	SetArmor(RemainingArmor);
-
-	// Recalculate the damage
-
-	Damage = (Damage * (1 - ArmorAbsorption)) - FMath::Min(RemainingArmor, 0.0f);
 }
 
 void AFPSCharacter::AddWeapon(TSubclassOf<AWeapon> DesiredWeaponClass)

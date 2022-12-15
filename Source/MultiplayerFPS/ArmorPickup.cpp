@@ -5,5 +5,5 @@ void AArmorPickup::OnPickedUp(AFPSCharacter* Character)
 {
 	Super::OnPickedUp(Character);
 
-	Character->AddArmor(ArmorAmount);
+	//Character->AddArmor(ArmorAmount);
 }

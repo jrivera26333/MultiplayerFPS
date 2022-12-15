@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetWeaponPortrait(UTexture2D* const& AbilityTexture);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetCharacterReference();
 };

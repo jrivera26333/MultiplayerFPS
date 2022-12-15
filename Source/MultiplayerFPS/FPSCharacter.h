@@ -33,17 +33,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Character")
 	FString CharacterName;
 
-	// Armor
-
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "FPS Character")
-	float Armor = 0.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Character")
-	float MaxArmor = 100.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Character")
-	float ArmorAbsorption = 0.5;
-
 	// Weapons
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Character")
@@ -130,12 +119,6 @@ public:
 	void SetHealth(float NewHealth) { Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth); }
 	bool IsDead() const { return Health == 0.0f; }
 
-	// Armor
-
-	void AddArmor(float Amount) { SetArmor(Armor + Amount); }
-	void SetArmor(float Amount) { Armor = FMath::Clamp(Amount, 0.0f, MaxArmor); }
-	void ArmorAbsorbDamage(float& Damage);
-
 	// Weapons
 
 	void AddWeapon(TSubclassOf<AWeapon> WeaponType);
@@ -144,4 +127,7 @@ public:
 
 	FVector GetCameraLocation() const { return CameraComponent->GetComponentLocation(); }
 	FVector GetCameraDirection() const { return GetControlRotation().Vector(); }
+
+private:
+	class AFPSPlayerController* LocalFPSController;
 };
