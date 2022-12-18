@@ -7,13 +7,12 @@ void AFPSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Allows only client (listen server included to create UI)
 	if (!IsLocalController() || PlayerMenuClass == nullptr)
 	{
 		return;		
 	}
 	
-	UE_LOG(LogTemp, Warning, TEXT("Created Controller"));
-
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
 	if (PlayerMenu != nullptr)
@@ -58,7 +57,6 @@ void AFPSPlayerController::AddAbilityPortraits()
 		for (FAbilitySets Ability : Abilities)
 		{
 			PlayerMenu->SetAbilityIcons(Ability.AbilityInput, Ability.AbilityTexture);
-			UE_LOG(LogTemp, Warning, TEXT("Created!"));
 		}
 	}
 }
@@ -68,7 +66,6 @@ void AFPSPlayerController::AddWeaponPortrait()
 	if (WeaponPortrait != nullptr)
 	{
 		PlayerMenu->SetWeaponPortrait(WeaponPortrait);
-		UE_LOG(LogTemp, Warning, TEXT("Weapon Set"));
 	}
 }
 
@@ -76,7 +73,6 @@ void AFPSPlayerController::ResetPlayerReference()
 {
 	if (PlayerMenu != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SetCharacterReference called"));
 		PlayerMenu->SetCharacterReference();
 	}
 }
