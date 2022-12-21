@@ -22,6 +22,9 @@ protected:
 	virtual void HandleMatchHasEnded() override;
 	virtual bool ReadyToEndMatch_Implementation() override;
 
+	//Called after a successful login.This is the first place it is safe to call replicated functions on the PlayerController.
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
 	void RestartMap();
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
@@ -42,6 +45,7 @@ private:
 
 	bool HasSpawnedCharacter;
 
+	void StartGame();
 	void BubbleSortPlayerStarts(AActor* const &Killer);
 
 	UPROPERTY()
@@ -51,4 +55,8 @@ private:
 	class AFPSGameState* CurrentGameState;
 
 	TArray<int> SpawnedIndexes;
+
+	uint32 NumberOfPlayers = 0;
+
+	FTimerHandle GameStartTimer;
 };

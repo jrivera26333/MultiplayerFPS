@@ -7,7 +7,9 @@
 #include "Engine/World.h"
 #include "Engine/Public/TimerManager.h"
 #include "FPSPlayerStart.h"
+#include "TimerManager.h"
 
+//Game mode exists only on the server, and in our case Listen Server
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 {
 	DefaultPawnClass = AFPSCharacter::StaticClass();
@@ -17,6 +19,33 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 
 	CurrentGameState = GetGameState<AFPSGameState>();
 	FindPlayerStarts();
+}
+
+void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	//++NumberOfPlayers;
+
+	//if (NumberOfPlayers >= 2)
+	//{
+	//	GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 10);
+	//}
+}
+
+void AMultiplayerFPSGameModeBase::StartGame()
+{
+	//auto GameInstance = Cast<AMultiplayerFPSGameModeBase>(GetGameInstance());
+
+	//if (GameInstance == nullptr) return;
+
+	//GameInstance->StartSession();
+
+	//UWorld* World = GetWorld();
+	//if (!ensure(World != nullptr)) return;
+
+	//bUseSeamlessTravel = true;
+	//World->ServerTravel("/Game/PuzzlePlatforms/Maps/Game?listen");
 }
 
 void AMultiplayerFPSGameModeBase::GetFarthestPlayerStart()
@@ -172,6 +201,7 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		}
 	}
 }
+
 
 void AMultiplayerFPSGameModeBase::RestartMap()
 {
