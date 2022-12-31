@@ -8,7 +8,7 @@
 
 const static FName SESSION_NAME = TEXT("My Session Game");
 
-//All Clients have a GameInstance often used for persisten data
+//All Clients have a GameInstance often used for persistent data
 void UMultiplayerFPSGameInstance::Init()
 {
 	Super::Init();
@@ -25,8 +25,20 @@ void UMultiplayerFPSGameInstance::Init()
 		//IsValid() for SharedPtrs
 		if (SessionInterface.IsValid())
 		{
+			//Callbacks
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnDestroySessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnFindSessionsComplete);
+
+			//Casting SharedPtr to SharedRef
+			SessionSearch = MakeShareable(new FOnlineSessionSearch());
+			if (SessionSearch.IsValid())
+			{
+				SessionSearch->bIsLanQuery = true; //Looking over Local
+
+				UE_LOG(LogTemp, Warning, TEXT("Starting to find sessions"));
+				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+			}
 		}
 	}
 	else
@@ -54,7 +66,21 @@ void UMultiplayerFPSGameInstance::CreateSession()
 {
 	if (SessionInterface.IsValid())
 	{
+
 		FOnlineSessionSettings SessionSettings;
+
+		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
+		{
+			//Local
+			SessionSettings.bIsLANMatch = true;
+		}
+		else
+		{
+			SessionSettings.bIsLANMatch = false;
+		}
+
+		SessionSettings.NumPublicConnections = 2;
+		SessionSettings.bShouldAdvertise = true; //Be able to present itself
 
 		//Async Function so we will use a delegate. OnCreateSessionComplete()
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
@@ -66,6 +92,19 @@ void UMultiplayerFPSGameInstance::OnDestroySessionComplete(FName SessionName, bo
 	if (Success)
 	{
 		CreateSession();
+	}
+}
+
+void UMultiplayerFPSGameInstance::OnFindSessionsComplete(bool Success)
+{
+	if (Success && SessionSearch.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Finished find sessions"));
+
+		for (const FOnlineSessionSearchResult& NamedResult : SessionSearch->SearchResults)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found Session: %s"), *NamedResult.Session.GetSessionIdStr());
+		}
 	}
 }
 

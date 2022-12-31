@@ -19,14 +19,18 @@ protected:
 
 	void Init() override;
 
-private:
-
+	UFUNCTION(BlueprintCallable)
 	void Host();
+
 	void CreateSession();
 
+private:
+
 	IOnlineSessionPtr SessionInterface;
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
 	//Delegates
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
+	void OnFindSessionsComplete(bool Success);
 };
