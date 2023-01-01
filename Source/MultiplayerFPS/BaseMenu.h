@@ -15,11 +15,10 @@ class MULTIPLAYERFPS_API UBaseMenu : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	UWidgetSwitcher* WidgetSwitcher;
+	class UWidgetSwitcher* WidgetSwitcher;
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetSwitcher(UWidgetSwitcher* MainMenuWidget) { WidgetSwitcher = MainMenuWidget; }
 
-	UFUNCTION(BlueprintCallable)
 	UWidgetSwitcher* GetWidgetSwitcher() const { return WidgetSwitcher; }
 };

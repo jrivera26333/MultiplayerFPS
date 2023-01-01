@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "BaseMenu.h"
-#include "HostMenu.generated.h"
+#include "HomeMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MULTIPLAYERFPS_API UHostMenu : public UBaseMenu
+class MULTIPLAYERFPS_API UHomeMenu : public UBaseMenu
 {
 	GENERATED_BODY()
 
@@ -20,16 +20,22 @@ protected:
 	virtual bool Initialize() override;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* HostEnter;
+	class UButton* HomeHost;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* HostCancel;
+	class UButton* HomeJoin;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* HomeQuit;
 
 private:
 
 	UFUNCTION()
-	void HostEnterClicked();
+	void HomeHostClicked();
 
 	UFUNCTION()
-	void HostCancelClicked();
+	void HomeJoinClicked();
+
+	UFUNCTION()
+	void HomeQuitClicked();
 };

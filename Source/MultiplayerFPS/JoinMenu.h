@@ -14,5 +14,22 @@ UCLASS()
 class MULTIPLAYERFPS_API UJoinMenu : public UBaseMenu
 {
 	GENERATED_BODY()
+
+protected:
+
+	virtual bool Initialize() override;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* JoinEnter;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* JoinCancel;
+
+private:
 	
+	UFUNCTION()
+	void JoinEnterClicked();
+
+	UFUNCTION()
+	void JoinCancelClicked();
 };
