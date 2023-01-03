@@ -25,4 +25,9 @@ void UJoinMenu::JoinCancelClicked()
 void UJoinMenu::JoinEnterClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Join Enter Pressed"));
+
+	if (GetFPSGameInstance())
+	{
+		GetFPSGameInstance()->DebugSession();
+	}
 }

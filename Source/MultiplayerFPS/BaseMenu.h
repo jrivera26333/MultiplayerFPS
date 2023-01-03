@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "MultiplayerFPSGameInstance.h"
 #include "BaseMenu.generated.h"
 
 /**
@@ -15,10 +16,18 @@ class MULTIPLAYERFPS_API UBaseMenu : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+
+	virtual bool Initialize() override;
+
 	class UWidgetSwitcher* WidgetSwitcher;
 
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetSwitcher(UWidgetSwitcher* MainMenuWidget) { WidgetSwitcher = MainMenuWidget; }
 
 	UWidgetSwitcher* GetWidgetSwitcher() const { return WidgetSwitcher; }
+
+
+	UMultiplayerFPSGameInstance* FPSGameInstance;
+	UMultiplayerFPSGameInstance* GetFPSGameInstance() const {return FPSGameInstance;}
+	void SetFPSGameInstance() { FPSGameInstance = Cast<UMultiplayerFPSGameInstance>(GetGameInstance()); }
 };

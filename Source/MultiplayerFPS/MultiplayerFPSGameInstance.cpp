@@ -127,3 +127,8 @@ void UMultiplayerFPSGameInstance::OnCreateSessionComplete(FName SessionName, boo
 	//Will jump the server to a new level and all connected clients will follow. Server will call APlayerController::ClientTravel for all Client Players connected
 	World->ServerTravel("/Game/Maps/Lobby?listen");
 }
+
+void UMultiplayerFPSGameInstance::DebugSession()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Session Debug"));
+}
