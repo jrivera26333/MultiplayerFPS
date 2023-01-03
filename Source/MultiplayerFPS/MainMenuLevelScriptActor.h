@@ -18,13 +18,34 @@ protected:
 
 	virtual void BeginPlay();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Widget Class")
-	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Widget Menus")
+	TSubclassOf<UUserWidget> MainMenuManagerWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget Menus")
+	TSubclassOf<UUserWidget> HomeMenuWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget Menus")
+	TSubclassOf<UUserWidget> HostMenuWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget Menus")
+	TSubclassOf<UUserWidget> JoinMenuWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Widget Menus")
+	TSubclassOf<UUserWidget> JoinRowWidgetClass;
 
 private:
 
 	UFUNCTION(BlueprintCallable)
 	void CreateMainMenu();
+
+	void CreateSubMenus();
+
+	class UMainMenuManager* MainMenuWidget;
+
+	class UHomeMenu* HomeMenuWidget;
+	class UJoinMenu* JoinMenuWidget;
+	class UHostMenu* HostMenuWidget;
+	class UHostInfoRow* HostInfoRowWidget;
 
 	APlayerController* PlayerController;
 };

@@ -23,6 +23,8 @@ void UHostMenu::HostEnterClicked()
 
 void UHostMenu::HostCancelClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Host Enter Pressed"));
-	GetWidgetSwitcher()->SetActiveWidgetIndex(0);
+	UE_LOG(LogTemp, Warning, TEXT("Host Enter Canceled"));
+
+	if(GetWidgetSwitcher())
+		GetWidgetSwitcher()->SetActiveWidgetIndex(0);
 }

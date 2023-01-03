@@ -21,13 +21,12 @@ protected:
 
 	class UWidgetSwitcher* WidgetSwitcher;
 
-	UFUNCTION(BlueprintCallable)
-	void SetWidgetSwitcher(UWidgetSwitcher* MainMenuWidget) { WidgetSwitcher = MainMenuWidget; }
-
 	UWidgetSwitcher* GetWidgetSwitcher() const { return WidgetSwitcher; }
-
 
 	UMultiplayerFPSGameInstance* FPSGameInstance;
 	UMultiplayerFPSGameInstance* GetFPSGameInstance() const {return FPSGameInstance;}
 	void SetFPSGameInstance() { FPSGameInstance = Cast<UMultiplayerFPSGameInstance>(GetGameInstance()); }
+
+public:
+	void SetWidgetSwitcher(UWidgetSwitcher* MainMenuWidget) { WidgetSwitcher = MainMenuWidget; }
 };

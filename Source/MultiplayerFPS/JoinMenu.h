@@ -32,4 +32,16 @@ private:
 
 	UFUNCTION()
 	void JoinCancelClicked();
+
+	UPROPERTY(meta = (BindWidget))
+	class UScrollBox* RollScrollBox;
+
+	TSubclassOf<UUserWidget> JoinRowWidgetClass;
+	class UHostInfoRow* JoinRowWidget;
+
+	APlayerController* PlayerController;
+
+public:
+
+	void SetRowWidget(TSubclassOf<UUserWidget> JoinRow) { JoinRowWidgetClass = JoinRow; };
 };

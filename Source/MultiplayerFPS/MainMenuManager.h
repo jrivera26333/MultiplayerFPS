@@ -14,6 +14,11 @@ class MULTIPLAYERFPS_API UMainMenuManager : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY(meta = (BindWidget))
+	class UWidgetSwitcher* WidgetSwitcherMenu;
+
 public:
-	void SetupPages();
+	class UWidgetSwitcher* GetMenuWidgetSwitcher() const {return WidgetSwitcherMenu;}
 };

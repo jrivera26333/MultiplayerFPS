@@ -22,13 +22,17 @@ bool UHomeMenu::Initialize()
 void UHomeMenu::HomeHostClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Home Host Pressed"));
-	GetWidgetSwitcher()->SetActiveWidgetIndex(1);
+
+	if(GetWidgetSwitcher())
+		GetWidgetSwitcher()->SetActiveWidgetIndex(1);
 }
 
 void UHomeMenu::HomeJoinClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Home Join Pressed"));
-	GetWidgetSwitcher()->SetActiveWidgetIndex(2);
+
+	if (GetWidgetSwitcher())
+		GetWidgetSwitcher()->SetActiveWidgetIndex(2);
 }
 
 void UHomeMenu::HomeQuitClicked()
