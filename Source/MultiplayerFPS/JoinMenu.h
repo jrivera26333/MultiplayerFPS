@@ -44,4 +44,5 @@ private:
 public:
 
 	void SetRowWidget(TSubclassOf<UUserWidget> JoinRow) { JoinRowWidgetClass = JoinRow; };
+	void SetServerList(TArray<FString> ServerNames);
 };

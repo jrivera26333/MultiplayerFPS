@@ -28,21 +28,25 @@ void UJoinMenu::JoinCancelClicked()
 		GetWidgetSwitcher()->SetActiveWidgetIndex(0);
 }
 
+void UJoinMenu::SetServerList(TArray<FString> ServerNames)
+{
+	for (const FString& ServerName : ServerNames)
+	{
+		if (JoinRowWidgetClass)
+		{
+			JoinRowWidget = CreateWidget<UHostInfoRow>(PlayerController, JoinRowWidgetClass);
+			//JoinRowWidget->SetRowTexts(ServerName, "", "");
+			RollScrollBox->AddChild(JoinRowWidget);
+			UE_LOG(LogTemp, Warning, TEXT("Class not null!"));
+		}
+		else
+			UE_LOG(LogTemp, Warning, TEXT("Class null!"));
+	}
+}
+
 void UJoinMenu::JoinEnterClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Join Enter Pressed"));
 
-	if (JoinRowWidgetClass)
-	{
-		JoinRowWidget = CreateWidget<UHostInfoRow>(PlayerController, JoinRowWidgetClass);
-		RollScrollBox->AddChild(JoinRowWidget);
-		UE_LOG(LogTemp, Warning, TEXT("Class not null!"));
-	}
-	else
-		UE_LOG(LogTemp, Warning, TEXT("Class null!"));
 
-	if (GetFPSGameInstance())
-	{
-		GetFPSGameInstance()->DebugSession();
-	}
 }

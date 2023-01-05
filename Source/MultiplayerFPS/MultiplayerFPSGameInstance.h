@@ -5,35 +5,59 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h"
+#include "Interfaces/OnlineSessionInterface.h"
+
+#include "MenuInterface.h"
 #include "MultiplayerFPSGameInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MULTIPLAYERFPS_API UMultiplayerFPSGameInstance : public UGameInstance
+class MULTIPLAYERFPS_API UMultiplayerFPSGameInstance : public UGameInstance, public IMenuInterface
 {
 	GENERATED_BODY()
 	
-protected:
+public:
+	UMultiplayerFPSGameInstance(const FObjectInitializer& ObjectInitializer);
 
-	void Init() override;
+	virtual void Init();
 
 	UFUNCTION(BlueprintCallable)
-	void Host();
+	void LoadMenuWidget();
 
-	void CreateSession();
+	UFUNCTION(BlueprintCallable)
+	void InGameLoadMenu();
+
+	UFUNCTION(Exec)
+	void Host(FString ServerName) override;
+
+	UFUNCTION(Exec)
+	void Join(uint32 Index) override;
+
+	void StartSession();
+
+	virtual void LoadMainMenu() override;
+
+	void RefreshServerList() override;
 
 private:
 
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
+	TSubclassOf<class UUserWidget> MenuClass;
+	TSubclassOf<class UUserWidget> InGameMenuClass;
+
+	class UMainMenu* Menu;
+
 	//Delegates
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionsComplete(bool Success);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
 
-public:
-	void DebugSession();
+	FString DesiredServerName;
+	void CreateSession();
 };

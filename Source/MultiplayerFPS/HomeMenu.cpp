@@ -4,6 +4,17 @@
 #include "HomeMenu.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "UObject/ConstructorHelpers.h"
+#include "HostInfoRow.h"
+#include "Blueprint/UserWidget.h"
+
+UHomeMenu::UHomeMenu(const FObjectInitializer& ObjectInitializer)
+{
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/UI/Menus/UI_Row"));
+	if (!ensure(ServerRowBPClass.Class != nullptr)) return;
+
+	ServerRowClass = ServerRowBPClass.Class;
+}
 
 bool UHomeMenu::Initialize()
 {
@@ -14,7 +25,10 @@ bool UHomeMenu::Initialize()
 	HomeJoin->OnClicked.AddDynamic(this, &UHomeMenu::HomeJoinClicked);
 	HomeQuit->OnClicked.AddDynamic(this, &UHomeMenu::HomeQuitClicked);
 
-	UE_LOG(LogTemp, Warning, TEXT("Home Init"));
+	HostEnter->OnClicked.AddDynamic(this, &UHomeMenu::HomeHostClicked);
+	HostCancel->OnClicked.AddDynamic(this, &UHomeMenu::HomeJoinClicked);
+	JoinEnter->OnClicked.AddDynamic(this, &UHomeMenu::HomeQuitClicked);
+	JoinCancel->OnClicked.AddDynamic(this, &UHomeMenu::HomeQuitClicked);
 
 	return true;
 }
@@ -38,4 +52,20 @@ void UHomeMenu::HomeJoinClicked()
 void UHomeMenu::HomeQuitClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Home Quit Pressed"));
+}
+
+void UHomeMenu::HostEnterClicked()
+{
+}
+
+void UHomeMenu::HomeCancelClicked()
+{
+}
+
+void UHomeMenu::JoinEnterClicked()
+{
+}
+
+void UHomeMenu::JoinCancelClicked()
+{
 }

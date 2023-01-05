@@ -3,26 +3,16 @@
 
 #include "HostInfoRow.h"
 #include "Components/Button.h"
-#include "Components/TextBlock.h"
+#include "MainMenu.h"
 
-bool UHostInfoRow::Initialize()
+void UHostInfoRow::Setup(class UMainMenu* InParent, uint32 InIndex)
 {
-	bool Success = Super::Initialize();
-	if (!Success) return false;
-
-	ServerButton->OnClicked.AddDynamic(this, &UHostInfoRow::ServerButtonClicked);
-
-	return true;
+	Parent = InParent;
+	Index = InIndex;
+	RowButton->OnClicked.AddDynamic(this, &UHostInfoRow::OnClicked);
 }
 
-void UHostInfoRow::SetRowTexts(const FString& ServerName, const FString& HostName, const FString& PlayersAmount)
+void UHostInfoRow::OnClicked()
 {
-	ServerNameText->SetText(FText::FromString(ServerName));
-	HostNameText->SetText(FText::FromString(HostName));
-	PlayersAmountText->SetText(FText::FromString(PlayersAmount));
-}
-
-void UHostInfoRow::ServerButtonClicked()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Server Button Clicked!"));
+	Parent->SelectIndex(Index);
 }

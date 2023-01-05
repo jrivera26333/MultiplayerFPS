@@ -15,27 +15,29 @@ class MULTIPLAYERFPS_API UHostInfoRow : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
-	void SetRowTexts(const FString& ServerName, const FString& HostName, const FString& PlayersAmount);
-	
-protected:
-
-	virtual bool Initialize() override;
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ServerName;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* ServerButton;
+	class UTextBlock* HostUser;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* ServerNameText;
+	class UTextBlock* ConnectionFraction;
 
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* HostNameText;
+	UPROPERTY(BlueprintReadOnly)
+	bool Selected = false;
 
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* PlayersAmountText;
+	void Setup(class UMainMenu* Parent, uint32 Index);
 
 private:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* RowButton;
+
+	UPROPERTY()
+	class UMainMenu* Parent;
+
+	uint32 Index;
 
 	UFUNCTION()
-	void ServerButtonClicked();
+	void OnClicked();
 };
