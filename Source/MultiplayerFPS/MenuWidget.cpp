@@ -38,6 +38,10 @@ void UMenuWidget::Teardown()
 	PlayerController->bShowMouseCursor = false;
 }
 
+/// <summary>
+/// Passing in functionality to inherited classes
+/// </summary>
+/// <param name="CachedMenuInterface"></param>
 void UMenuWidget::SetMenuInterface(IMenuInterface* CachedMenuInterface)
 {
 	this->MenuInterface = CachedMenuInterface;

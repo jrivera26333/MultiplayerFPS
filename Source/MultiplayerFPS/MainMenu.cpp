@@ -12,6 +12,10 @@
 
 #include "HostInfoRow.h"
 
+/// <summary>
+/// Holds all UI Information and Bindings
+/// </summary>
+/// <param name="ObjectInitializer"></param>
 UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer)
 {
 	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/UI/Menus/UI_Row"));

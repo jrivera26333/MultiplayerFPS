@@ -12,7 +12,10 @@
 const static FName SESSION_NAME = TEXT("Game");
 const static FName SERVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 
-
+/// <summary>
+/// Game instance will be used to create the menus and pass in the button logic interface
+/// </summary>
+/// <param name="ObjectInitializer"></param>
 UMultiplayerFPSGameInstance::UMultiplayerFPSGameInstance(const FObjectInitializer& ObjectInitializer)
 {
 	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/UI/Menus/WBP_HomeMenu"));
@@ -20,7 +23,7 @@ UMultiplayerFPSGameInstance::UMultiplayerFPSGameInstance(const FObjectInitialize
 
 	MenuClass = MenuBPClass.Class;
 
-	ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/UI/MenuSystem/WBP_GameplayMenu"));
+	ConstructorHelpers::FClassFinder<UUserWidget> InGameMenuBPClass(TEXT("/Game/UI/WBP_GameplayMenu"));
 	if (!ensure(InGameMenuBPClass.Class != nullptr)) return;
 
 	InGameMenuClass = InGameMenuBPClass.Class;
@@ -63,6 +66,9 @@ void UMultiplayerFPSGameInstance::Init()
 		UE_LOG(LogTemp, Warning, TEXT("Subsystem is not null!"));
 }
 
+/// <summary>
+/// Called from Level Blueprint (MainMenu)
+/// </summary>
 void UMultiplayerFPSGameInstance::LoadMenuWidget()
 {
 	if (!ensure(MenuClass != nullptr)) return;
@@ -70,10 +76,17 @@ void UMultiplayerFPSGameInstance::LoadMenuWidget()
 	Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu != nullptr)) return;
 
+	UE_LOG(LogTemp, Warning, TEXT("Menu Loaded"));
+
 	Menu->Setup();
+
+	//Passing in the interface to the base class menu
 	Menu->SetMenuInterface(this);
 }
 
+/// <summary>
+/// Called from Level Blueprint (Main)
+/// </summary>
 void UMultiplayerFPSGameInstance::InGameLoadMenu()
 {
 	if (!ensure(InGameMenuClass != nullptr)) return;
@@ -85,6 +98,21 @@ void UMultiplayerFPSGameInstance::InGameLoadMenu()
 	GameMenu->SetMenuInterface(this);
 }
 
+/// <summary>
+/// Interface
+/// </summary>
+void UMultiplayerFPSGameInstance::LoadMainMenu()
+{
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+
+	PlayerController->ClientTravel("/Game/UI/WBP_GameplayMenu", ETravelType::TRAVEL_Absolute);
+}
+
+/// <summary>
+/// Interface
+/// </summary>
+/// <param name="ServerName"></param>
 void UMultiplayerFPSGameInstance::Host(FString ServerName)
 {
 	DesiredServerName = ServerName;
@@ -103,6 +131,10 @@ void UMultiplayerFPSGameInstance::Host(FString ServerName)
 	}
 }
 
+/// <summary>
+/// Interface
+/// </summary>
+/// <param name="Index"></param>
 void UMultiplayerFPSGameInstance::Join(uint32 Index)
 {
 	if (!SessionInterface.IsValid()) return;
@@ -116,22 +148,9 @@ void UMultiplayerFPSGameInstance::Join(uint32 Index)
 	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[Index]);
 }
 
-void UMultiplayerFPSGameInstance::StartSession()
-{
-	if (SessionInterface.IsValid())
-	{
-		SessionInterface->StartSession(SESSION_NAME);
-	}
-}
-
-void UMultiplayerFPSGameInstance::LoadMainMenu()
-{
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController != nullptr)) return;
-
-	PlayerController->ClientTravel("/Game/UI/WBP_GameplayMenu", ETravelType::TRAVEL_Absolute);
-}
-
+/// <summary>
+/// Interface
+/// </summary>
 void UMultiplayerFPSGameInstance::RefreshServerList()
 {
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
@@ -149,7 +168,6 @@ void UMultiplayerFPSGameInstance::CreateSession()
 {
 	if (SessionInterface.IsValid())
 	{
-
 		FOnlineSessionSettings SessionSettings;
 
 		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
@@ -169,6 +187,16 @@ void UMultiplayerFPSGameInstance::CreateSession()
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
 }
+
+void UMultiplayerFPSGameInstance::StartSession()
+{
+	if (SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
+	}
+}
+
+//Callbacks*********************************************************************************
 
 void UMultiplayerFPSGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
