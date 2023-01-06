@@ -18,7 +18,7 @@
 /// <param name="ObjectInitializer"></param>
 UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer)
 {
-	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/UI/Menus/UI_Row"));
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/UI/Menus/WBP_Row"));
 	if (!ensure(ServerRowBPClass.Class != nullptr)) return;
 
 	ServerRowClass = ServerRowBPClass.Class;

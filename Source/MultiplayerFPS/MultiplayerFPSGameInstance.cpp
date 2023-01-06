@@ -50,20 +50,16 @@ void UMultiplayerFPSGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnFindSessionsComplete);
-
-			//Casting SharedPtr to SharedRef
-			SessionSearch = MakeShareable(new FOnlineSessionSearch());
-			if (SessionSearch.IsValid())
-			{
-				SessionSearch->bIsLanQuery = true; //Looking over Local
-
-				UE_LOG(LogTemp, Warning, TEXT("Starting to find sessions"));
-				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-			}
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMultiplayerFPSGameInstance::OnJoinSessionComplete);
 		}
 	}
 	else
 		UE_LOG(LogTemp, Warning, TEXT("Subsystem is not null!"));
+
+	if (GEngine != nullptr)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this, &UMultiplayerFPSGameInstance::OnNetworkFailure);
+	}
 }
 
 /// <summary>
@@ -166,24 +162,22 @@ void UMultiplayerFPSGameInstance::RefreshServerList()
 
 void UMultiplayerFPSGameInstance::CreateSession()
 {
-	if (SessionInterface.IsValid())
-	{
+	if (SessionInterface.IsValid()) {
 		FOnlineSessionSettings SessionSettings;
-
 		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
 		{
-			//Local
 			SessionSettings.bIsLANMatch = true;
 		}
 		else
 		{
 			SessionSettings.bIsLANMatch = false;
 		}
+		SessionSettings.NumPublicConnections = 5;
+		SessionSettings.bShouldAdvertise = true;
+		SessionSettings.bUsesPresence = true;
+		SessionSettings.Set(SERVER_NAME_SETTINGS_KEY, DesiredServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 
-		SessionSettings.NumPublicConnections = 2;
-		SessionSettings.bShouldAdvertise = true; //Be able to present itself
-
-		//Async Function so we will use a delegate. OnCreateSessionComplete()
+		//Sessions are created using IOnlineSession::CreateSession() which takes in a set of session settings that are used to configure the new session. Once the session is created, the OnCreateSessionComplete delegate is fired.
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
 }
@@ -210,9 +204,10 @@ void UMultiplayerFPSGameInstance::OnFindSessionsComplete(bool Success)
 {
 	if (Success && SessionSearch.IsValid() && Menu != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
+		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session. Number Found: %i"), SessionSearch->SearchResults.Num());
 
 		TArray<FServerData> ServerNames;
+
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr());
@@ -283,5 +278,5 @@ void UMultiplayerFPSGameInstance::OnCreateSessionComplete(FName SessionName, boo
 	UWorld* World = GetWorld();
 	if (!ensure(World != nullptr)) return;
 
-	World->ServerTravel("/Game/PuzzlePlatforms/Maps/Lobby?listen");
+	World->ServerTravel("/Game/Maps/Lobby?listen");
 }
