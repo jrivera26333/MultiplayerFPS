@@ -32,8 +32,6 @@ UMultiplayerFPSGameInstance::UMultiplayerFPSGameInstance(const FObjectInitialize
 //All Clients have a GameInstance often used for persistent data
 void UMultiplayerFPSGameInstance::Init()
 {
-	Super::Init();
-
 	//Getting the current Subsystem. (Null by default unless specified in the DefaultEngine.ini file
 	static IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	if (Subsystem != nullptr)
@@ -133,6 +131,8 @@ void UMultiplayerFPSGameInstance::Host(FString ServerName)
 /// <param name="Index"></param>
 void UMultiplayerFPSGameInstance::Join(uint32 Index)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Join Session."));
+
 	if (!SessionInterface.IsValid()) return;
 	if (!SessionSearch.IsValid()) return;
 
@@ -162,6 +162,8 @@ void UMultiplayerFPSGameInstance::RefreshServerList()
 
 void UMultiplayerFPSGameInstance::CreateSession()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Create Session."));
+
 	if (SessionInterface.IsValid()) {
 		FOnlineSessionSettings SessionSettings;
 		if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
@@ -249,6 +251,7 @@ void UMultiplayerFPSGameInstance::OnJoinSessionComplete(FName SessionName, EOnJo
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController != nullptr)) return;
 
+	UE_LOG(LogTemp, Warning, TEXT("Traveled"));
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 

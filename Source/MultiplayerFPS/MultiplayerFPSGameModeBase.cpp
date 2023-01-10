@@ -8,6 +8,7 @@
 #include "Engine/Public/TimerManager.h"
 #include "FPSPlayerStart.h"
 #include "TimerManager.h"
+#include "MultiplayerFPSGameInstance.h"
 
 //Game mode exists only on the server, and in our case Listen Server
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
@@ -25,27 +26,28 @@ void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	//++NumberOfPlayers;
+	++NumberOfPlayers;
 
-	//if (NumberOfPlayers >= 2)
-	//{
-	//	GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 10);
-	//}
+	if (NumberOfPlayers >= 2)
+	{
+		GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 10);
+	}
 }
 
 void AMultiplayerFPSGameModeBase::StartGame()
 {
-	//auto GameInstance = Cast<AMultiplayerFPSGameModeBase>(GetGameInstance());
+	auto GameInstance = Cast<UMultiplayerFPSGameInstance>(GetGameInstance());
+	UE_LOG(LogTemp, Warning, TEXT("Starting Game"));
 
-	//if (GameInstance == nullptr) return;
+	if (GameInstance == nullptr) return;
 
-	//GameInstance->StartSession();
+	GameInstance->StartSession();
 
-	//UWorld* World = GetWorld();
-	//if (!ensure(World != nullptr)) return;
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return;
 
-	//bUseSeamlessTravel = true;
-	//World->ServerTravel("/Game/PuzzlePlatforms/Maps/Game?listen");
+	bUseSeamlessTravel = true;
+	World->ServerTravel("/Game/Maps/Main?listen");
 }
 
 void AMultiplayerFPSGameModeBase::GetFarthestPlayerStart()

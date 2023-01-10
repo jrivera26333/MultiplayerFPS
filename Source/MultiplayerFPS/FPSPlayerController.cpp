@@ -53,9 +53,9 @@ void AFPSPlayerController::AddAbilityPortraits()
 {
 	if (Abilities.Num() > 0)
 	{
-		//TODO: Research for leak
 		for (FAbilitySets Ability : Abilities)
 		{
+			//Blueprint Callable that is being called on the PlayerMenu_BP
 			PlayerMenu->SetAbilityIcons(Ability.AbilityInput, Ability.AbilityTexture);
 		}
 	}
