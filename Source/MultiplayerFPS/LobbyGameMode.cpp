@@ -8,6 +8,7 @@
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
+
 	++NumberOfPlayers;
 
 	UE_LOG(LogTemp, Warning, TEXT("Logged"));

@@ -13,6 +13,8 @@
 //Game mode exists only on the server, and in our case Listen Server
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Game Mode!"));
+
 	DefaultPawnClass = AFPSCharacter::StaticClass();
 	PlayerControllerClass = AFPSPlayerController::StaticClass();
 	PlayerStateClass = AFPSPlayerState::StaticClass();
@@ -26,12 +28,17 @@ void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(NewPlayer);
+	LoggedInPlayer->SetPlayerNumber(NumberOfPlayers);
+
 	++NumberOfPlayers;
 
 	if (NumberOfPlayers >= 2)
 	{
 		GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 10);
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Set Player Point: %i"), LoggedInPlayer->GetPlayerNumber());
 }
 
 void AMultiplayerFPSGameModeBase::StartGame()
@@ -65,8 +72,6 @@ void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 {
 	TSubclassOf<AFPSPlayerStart> PlayerStart = AFPSPlayerStart::StaticClass();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerStart, PlayerStarts);
-
-	UE_LOG(LogTemp, Warning, TEXT("Starts: %s"), *FString::FromInt(PlayerStarts.Num()));
 }
 
 bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
@@ -230,12 +235,21 @@ void AMultiplayerFPSGameModeBase::BubbleSortPlayerStarts(AActor* const &Killer)
 
 AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
-	//auto RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
+	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(Player);
 
-	//while (SpawnedIndexes.Contains(RandomIndex))
-	//{
-	//	RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
-	//}
+	if (!LoggedInPlayer->GetHasSpawnBeenSet())
+	{
+		LoggedInPlayer->SetPlayerNumber(SpawnCounter);
+		LoggedInPlayer->SetHasSpawnBeenSet(true);
+		SpawnCounter++;
+	}
 
-	return PlayerStarts[0];
+	if (PlayerStarts.IsValidIndex(LoggedInPlayer->GetPlayerNumber()))
+	{
+		return PlayerStarts[LoggedInPlayer->GetPlayerNumber()];
+	}
+	else
+	{
+		return PlayerStarts[PlayerStarts.Num() - 1];
+	}
 }

@@ -57,6 +57,7 @@ private:
 	TArray<int> SpawnedIndexes;
 
 	uint32 NumberOfPlayers = 0;
+	uint32 SpawnCounter = 0;
 
 	FTimerHandle GameStartTimer;
 };

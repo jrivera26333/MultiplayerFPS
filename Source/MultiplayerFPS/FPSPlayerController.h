@@ -51,4 +51,15 @@ public:
 	void AddAbilityPortraits();
 	void AddWeaponPortrait();
 	void ResetPlayerReference();
+
+	void SetPlayerNumber(int32 PlayerCount) { PlayerNumber = PlayerCount; };
+	int32 GetPlayerNumber() { return PlayerNumber; };
+
+	void SetHasSpawnBeenSet(bool SpawnSet) { HasSpawnBeenSet = SpawnSet; };
+	bool GetHasSpawnBeenSet() { return HasSpawnBeenSet; };
+
+private:
+	
+	int32 PlayerNumber;
+	bool HasSpawnBeenSet;
 };
