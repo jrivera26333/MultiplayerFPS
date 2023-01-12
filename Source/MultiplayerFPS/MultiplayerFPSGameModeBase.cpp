@@ -87,6 +87,7 @@ void AMultiplayerFPSGameModeBase::HandleMatchHasStarted()
 {
 	Super::HandleMatchHasStarted();
 
+	UE_LOG(LogTemp, Warning, TEXT("Match Started"));
 	// Tell the kill limit to the game state
 
 	AFPSGameState* FPSGameState = Cast<AFPSGameState>(GameState);
@@ -96,11 +97,14 @@ void AMultiplayerFPSGameModeBase::HandleMatchHasStarted()
 		FPSGameState->SetKillLimit(KillLimit);
 	}
 }
-
+/// <summary>
+/// Called when ReadyToEndMatch returns true
+/// </summary>
 void AMultiplayerFPSGameModeBase::HandleMatchHasEnded()
 {
 	Super::HandleMatchHasEnded();
 
+	UE_LOG(LogTemp, Warning, TEXT("Match Ended"));
 	TArray<AActor*> PlayerControllers;
 
 	UGameplayStatics::GetAllActorsOfClass(this, AFPSPlayerController::StaticClass(), PlayerControllers);
@@ -124,8 +128,25 @@ void AMultiplayerFPSGameModeBase::HandleMatchHasEnded()
 
 	FTimerHandle TimerHandle;
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMultiplayerFPSGameModeBase::RestartMap, 5.0f);
+	UE_LOG(LogTemp, Warning, TEXT("Restart Map Called!"));
 }
 
+void AMultiplayerFPSGameModeBase::RestartMap()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Map Name: %s"), *GetWorld()->GetName());
+	//GetWorld()->ServerTravel(GetWorld()->GetName(), false, false);
+
+	TArray<AActor*> PlayerControllers;
+	UGameplayStatics::GetAllActorsOfClass(this, AFPSPlayerController::StaticClass(), PlayerControllers);
+
+	for (AActor* PlayerController : PlayerControllers)
+	{
+		AFPSPlayerController* FPSPlayerController = Cast<AFPSPlayerController>(PlayerController);
+		FPSPlayerController->ClientTravel("/Game/Maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	}
+}
+
+//Constantly being checked in the GameMode
 bool AMultiplayerFPSGameModeBase::ReadyToEndMatch_Implementation()
 {
 	return HasWinner();
@@ -207,12 +228,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[0]);
 		}
 	}
-}
-
-
-void AMultiplayerFPSGameModeBase::RestartMap()
-{
-	GetWorld()->ServerTravel(GetWorld()->GetName(), false, false);
 }
 
 void AMultiplayerFPSGameModeBase::BubbleSortPlayerStarts(AActor* const &Killer)
