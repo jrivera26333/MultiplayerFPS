@@ -173,7 +173,9 @@ void UMultiplayerFPSGameInstance::CreateSession()
 		else
 		{
 			SessionSettings.bIsLANMatch = false;
+			SessionSettings.bUseLobbiesIfAvailable = true;
 		}
+
 		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
