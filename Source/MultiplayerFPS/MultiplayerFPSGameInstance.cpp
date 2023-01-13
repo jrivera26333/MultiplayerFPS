@@ -153,6 +153,8 @@ void UMultiplayerFPSGameInstance::RefreshServerList()
 	if (SessionSearch.IsValid())
 	{
 		//SessionSearch->bIsLanQuery = true;
+
+		//Used for testing we would use a different app ID to zone in on our game
 		SessionSearch->MaxSearchResults = 10000;
 		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
