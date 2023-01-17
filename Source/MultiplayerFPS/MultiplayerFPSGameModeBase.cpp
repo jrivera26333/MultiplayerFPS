@@ -248,10 +248,9 @@ void AMultiplayerFPSGameModeBase::BubbleSortPlayerStarts(AActor* const &Killer)
 	}
 }
 
-AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+AActor* AMultiplayerFPSGameModeBase::InitialSpawn(AFPSPlayerController* LoggedInPlayer)
 {
-	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(Player);
-
+	//If player has not been spawned
 	if (!LoggedInPlayer->GetHasSpawnBeenSet())
 	{
 		LoggedInPlayer->SetPlayerNumber(SpawnCounter);
@@ -259,6 +258,7 @@ AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AControlle
 		SpawnCounter++;
 	}
 
+	//Geting the Player Spawn Number and using that for the Spawn Array Index
 	if (PlayerStarts.IsValidIndex(LoggedInPlayer->GetPlayerNumber()))
 	{
 		return PlayerStarts[LoggedInPlayer->GetPlayerNumber()];
@@ -266,5 +266,21 @@ AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AControlle
 	else
 	{
 		return PlayerStarts[PlayerStarts.Num() - 1];
+	}
+
+	LoggedInPlayer->SetHasInitiallySpawned(true);
+}
+
+AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+{
+	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(Player);
+
+	if (!LoggedInPlayer->GetHasInitiallySpawned())
+	{
+		return InitialSpawn(LoggedInPlayer);
+	}
+	else
+	{
+		return 
 	}
 }

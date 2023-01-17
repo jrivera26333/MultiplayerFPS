@@ -28,6 +28,8 @@ protected:
 	void RestartMap();
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
+	AActor* InitialSpawn(AFPSPlayerController* LoggedInPlayer);
+
 public:
 
 	bool HasWinner() const;
