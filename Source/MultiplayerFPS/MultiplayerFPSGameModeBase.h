@@ -28,7 +28,7 @@ protected:
 	void RestartMap();
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
-	AActor* InitialSpawn(AFPSPlayerController* LoggedInPlayer);
+	AActor* InitialSpawn(class AFPSPlayerController* LoggedInPlayer);
 
 public:
 
@@ -48,7 +48,6 @@ private:
 	bool HasSpawnedCharacter;
 
 	void StartGame();
-	void BubbleSortPlayerStarts(AActor* const &Killer);
 
 	UPROPERTY()
 	AActor* LastKnownKiller;

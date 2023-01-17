@@ -58,12 +58,8 @@ public:
 	void SetHasSpawnBeenSet(bool SpawnSet) { HasSpawnBeenSet = SpawnSet; };
 	bool GetHasSpawnBeenSet() { return HasSpawnBeenSet; };
 
-	void SetHasInitiallySpawned(bool InitiallySpawned) { HasInitiallySpawned = InitiallySpawned; };
-	bool GetHasInitiallySpawned() { return HasInitiallySpawned; };
-
 private:
 	
 	int32 PlayerNumber;
 	bool HasSpawnBeenSet;
-	bool HasInitiallySpawned;
 };

@@ -9,6 +9,7 @@
 #include "FPSPlayerStart.h"
 #include "TimerManager.h"
 #include "MultiplayerFPSGameInstance.h"
+#include "Math/UnrealMathUtility.h"
 
 //Game mode exists only on the server, and in our case Listen Server
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
@@ -223,27 +224,8 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 
 		if (!HasWinner())
 		{
-			//Gets the farthest SpawnPoint
-			BubbleSortPlayerStarts(LastKnownKiller);
-			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[0]);
-		}
-	}
-}
-
-void AMultiplayerFPSGameModeBase::BubbleSortPlayerStarts(AActor* const &Killer)
-{
-	for (int i = 0; i < PlayerStarts.Num() - 1; i++)
-	{
-		for (int j = 0; j < PlayerStarts.Num(); j++)
-		{
-			AActor* temp;
-
-			if (FVector::Distance(Killer->GetActorLocation(), PlayerStarts[i]->GetActorLocation()) > FVector::Distance(Killer->GetActorLocation(), PlayerStarts[j]->GetActorLocation()))
-			{
-				temp = PlayerStarts[i];
-				PlayerStarts[i] = PlayerStarts[j];
-				PlayerStarts[j] = temp;
-			}
+			int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
+			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[RandomIndex]);
 		}
 	}
 }
@@ -263,24 +245,12 @@ AActor* AMultiplayerFPSGameModeBase::InitialSpawn(AFPSPlayerController* LoggedIn
 	{
 		return PlayerStarts[LoggedInPlayer->GetPlayerNumber()];
 	}
-	else
-	{
-		return PlayerStarts[PlayerStarts.Num() - 1];
-	}
 
-	LoggedInPlayer->SetHasInitiallySpawned(true);
+	return PlayerStarts[PlayerStarts.Num() - 1];
 }
 
 AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 {
 	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(Player);
-
-	if (!LoggedInPlayer->GetHasInitiallySpawned())
-	{
-		return InitialSpawn(LoggedInPlayer);
-	}
-	else
-	{
-		return 
-	}
+	return InitialSpawn(LoggedInPlayer);
 }
