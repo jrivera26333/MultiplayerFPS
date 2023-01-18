@@ -47,6 +47,9 @@ private:
 	class UButton* JoinButton;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* SettingsButton;
+
+	UPROPERTY(meta = (BindWidget))
 	class UButton* QuitButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -60,6 +63,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ConfirmHostMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* CancelSettingsButton;
 
 	//Switchers
 
@@ -77,7 +83,8 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UWidget* HostMenu;
 
-
+	UPROPERTY(meta = (BindWidget))
+	class UWidget* SettingsMenu;
 
 	UPROPERTY(meta = (BindWidget))
 	class UEditableTextBox* ServerHostName;
@@ -99,6 +106,9 @@ private:
 
 	UFUNCTION()
 	void OpenMainMenu();
+
+	UFUNCTION()
+	void OpenSettingsMenu();
 
 	UFUNCTION()
 	void QuitPressed();

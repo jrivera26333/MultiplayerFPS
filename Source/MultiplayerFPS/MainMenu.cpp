@@ -49,6 +49,12 @@ bool UMainMenu::Initialize()
 	if (!ensure(ConfirmJoinMenuButton != nullptr)) return false;
 	ConfirmJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
 
+	if (!ensure(CancelSettingsButton != nullptr)) return false;
+	CancelSettingsButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
+
+	if (!ensure(SettingsButton != nullptr)) return false;
+	SettingsButton->OnClicked.AddDynamic(this, &UMainMenu::OpenSettingsMenu);
+
 	return true;
 }
 
@@ -135,8 +141,15 @@ void UMainMenu::OpenJoinMenu()
 void UMainMenu::OpenMainMenu()
 {
 	if (!ensure(MenuSwitcher != nullptr)) return;
-	if (!ensure(JoinMenu != nullptr)) return;
+	if (!ensure(MainMenu != nullptr)) return;
 	MenuSwitcher->SetActiveWidget(MainMenu);
+}
+
+void UMainMenu::OpenSettingsMenu()
+{
+	if (!ensure(MenuSwitcher != nullptr)) return;
+	if (!ensure(SettingsMenu != nullptr)) return;
+	MenuSwitcher->SetActiveWidget(SettingsMenu);
 }
 
 void UMainMenu::QuitPressed()
