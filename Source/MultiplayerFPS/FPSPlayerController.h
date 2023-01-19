@@ -40,6 +40,7 @@ protected:
 public:
 
 	void ToggleScoreboard();
+	void OpenSettingsMenu();
 
 	//PlayerController and Widgets should communicate to each other so client communication is prefered
 	UFUNCTION(Client, Reliable)

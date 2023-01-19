@@ -15,6 +15,9 @@ public:
 	void ToggleScoreboard();
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void OpenSettingsMenu();
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void SetScoreboardVisibility(bool bIsVisible);
 
 	UFUNCTION(BlueprintImplementableEvent)

@@ -9,6 +9,8 @@
 #include "FPSPlayerController.h"
 #include "Weapon.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "FPSPlayerController.h"
+#include "MultiplayerFPSGameModeBase.h"
 
 AFPSCharacter::AFPSCharacter()
 {
@@ -66,7 +68,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::OnPressedFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AFPSCharacter::OnReleasedFire);
 
-	PlayerInputComponent->BindAction("Scoreboard", IE_Pressed, this, &AFPSCharacter::OnPressedScoreboard);
+	//PlayerInputComponent->BindAction("Scoreboard", IE_Pressed, this, &AFPSCharacter::OnPressedScoreboard);
 
 	// Bind the axis mappings
 
@@ -74,6 +76,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::OnAxisMoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::OnAxisLookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::OnAxisTurn);
+	PlayerInputComponent->BindAction("Settings", IE_Pressed, this, &AFPSCharacter::OnPressedSettings);
 }
 
 void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -105,11 +108,29 @@ void AFPSCharacter::OnReleasedFire()
 	}
 }
 
+/// <summary>
+/// TODO: Implement Later
+/// </summary>
 void AFPSCharacter::OnPressedScoreboard()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Pressed from Char"));
 	if (LocalFPSController != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Local: Pressed from Char"));
 		LocalFPSController->ToggleScoreboard();
+	}
+}
+
+void AFPSCharacter::OnPressedSettings()
+{
+	//ServerShowSettingsPage();
+	// 
+	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	UE_LOG(LogTemp, Warning, TEXT("Pressed from Char"));
+	if (LocalFPSController != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Local: Pressed from Char"));
+		LocalFPSController->OpenSettingsMenu();
 	}
 }
 

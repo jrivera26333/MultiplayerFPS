@@ -87,6 +87,7 @@ protected:
 	void OnReleasedFire();
 
 	void OnPressedScoreboard();
+	void OnPressedSettings();
 
 	void OnAxisMoveForward(float Value);
 	void OnAxisMoveRight(float Value);

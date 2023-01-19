@@ -27,7 +27,17 @@ void AFPSPlayerController::ToggleScoreboard()
 {
 	if (PlayerMenu != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Toggle Clicked!"));
 		PlayerMenu->ToggleScoreboard();
+	}
+}
+
+void AFPSPlayerController::OpenSettingsMenu()
+{
+	if (PlayerMenu != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Settings Opened!"));
+		PlayerMenu->OpenSettingsMenu();
 	}
 }
 
