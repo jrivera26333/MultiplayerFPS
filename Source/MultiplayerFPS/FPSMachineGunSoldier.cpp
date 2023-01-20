@@ -39,12 +39,16 @@ void AFPSMachineGunSoldier::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void AFPSMachineGunSoldier::ServerSprintUpdate_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Sprinting Held Sprint Speed: %f"), GetVelocity().Size());
+
 	if (CharacterMovementComp != nullptr)
 		CharacterMovementComp->MaxWalkSpeed = MAX_RUN_SPEED;
 }
 
 void AFPSMachineGunSoldier::ServerWalkUpdate_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Sprinting Held Walk"));
+
 	if (CharacterMovementComp != nullptr)
 		CharacterMovementComp->MaxWalkSpeed = MAX_WALK_SPEED;
 }
@@ -60,6 +64,8 @@ void AFPSMachineGunSoldier::Client_HeldSprint()
 
 void AFPSMachineGunSoldier::Client_ReleasedSprint()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Sprinting Released"));
+
 	//Client Update
 	if (CharacterMovementComp != nullptr)
 		CharacterMovementComp->MaxWalkSpeed = MAX_WALK_SPEED;
