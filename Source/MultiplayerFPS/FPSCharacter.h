@@ -79,21 +79,6 @@ protected:
 
 	virtual void Landed(const FHitResult& Hit) override;
 
-	// Input
-
-	void OnPressedJump();
-
-	void OnPressedFire();
-	void OnReleasedFire();
-
-	void OnPressedScoreboard();
-	void OnPressedSettings();
-
-	void OnAxisMoveForward(float Value);
-	void OnAxisMoveRight(float Value);
-	void OnAxisLookUp(float Value);
-	void OnAxisTurn(float Value);
-
 	// Getters
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure)
@@ -112,7 +97,7 @@ public:
 
 	UFUNCTION(Client, Unreliable)
 	void ClientPlaySound2D(USoundBase* Sound);
-
+	
 	// Health
 
 	void AddHealth(float Amount) { SetHealth(Health + Amount); }
@@ -129,6 +114,29 @@ public:
 	FVector GetCameraLocation() const { return CameraComponent->GetComponentLocation(); }
 	FVector GetCameraDirection() const { return GetControlRotation().Vector(); }
 
+	//Getters
+	UFUNCTION(BlueprintCallable)
+	int GetHealth() const { return Health; }
+
+	UFUNCTION(BlueprintCallable)
+	int GetMaxHealth() const { return MaxHealth; }
+
 private:
 	class AFPSPlayerController* LocalFPSController;
+
+	// Inputs
+
+	void OnPressedJump();
+	void OnPressedReload();
+
+	void OnPressedFire();
+	void OnReleasedFire();
+
+	void OnPressedScoreboard();
+	void OnPressedSettings();
+
+	void OnAxisMoveForward(float Value);
+	void OnAxisMoveRight(float Value);
+	void OnAxisLookUp(float Value);
+	void OnAxisTurn(float Value);
 };

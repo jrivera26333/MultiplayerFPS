@@ -41,6 +41,7 @@ void AFPSCharacter::BeginPlay()
 		return;		
 	}
 
+	//SetHealth(MaxHealth);
 	SetHealth(MaxHealth);
 	AddWeapon(WeaponClass);
 
@@ -64,9 +65,10 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	// Bind the action mappings
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::OnPressedJump);
-
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::OnPressedFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AFPSCharacter::OnReleasedFire);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::OnPressedReload);
+	PlayerInputComponent->BindAction("Settings", IE_Pressed, this, &AFPSCharacter::OnPressedSettings);
 
 	//PlayerInputComponent->BindAction("Scoreboard", IE_Pressed, this, &AFPSCharacter::OnPressedScoreboard);
 
@@ -76,7 +78,6 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::OnAxisMoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::OnAxisLookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::OnAxisTurn);
-	PlayerInputComponent->BindAction("Settings", IE_Pressed, this, &AFPSCharacter::OnPressedSettings);
 }
 
 void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -90,6 +91,14 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 void AFPSCharacter::OnPressedJump()
 {
 	Jump();
+}
+
+void AFPSCharacter::OnPressedReload()
+{
+	if (Weapon != nullptr)
+	{
+		Weapon->Reload();
+	}
 }
 
 void AFPSCharacter::OnPressedFire()

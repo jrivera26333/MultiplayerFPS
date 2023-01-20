@@ -59,8 +59,13 @@ public:
 	void SetHasSpawnBeenSet(bool SpawnSet) { HasSpawnBeenSet = SpawnSet; };
 	bool GetHasSpawnBeenSet() { return HasSpawnBeenSet; };
 
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerID(const FString& PlayerID) { SteamPlayerID = PlayerID; }
+
 private:
 	
 	int32 PlayerNumber;
 	bool HasSpawnBeenSet;
+
+	FString SteamPlayerID;
 };

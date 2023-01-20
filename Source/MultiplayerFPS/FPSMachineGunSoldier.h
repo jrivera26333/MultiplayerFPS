@@ -40,10 +40,6 @@ private:
 	UFUNCTION(Server, Unreliable)
 	void ServerWalkUpdate();
 
-	//Replicating because we are firing our gun on the server which then needs to update the bullets on the client. Remember the call is only happening on the Server
-	//UPROPERTY(Replicated)
-	//bool IsSprinting = false;;
-
 	void Client_HeldSprint();
 	void Client_ReleasedSprint();
 };

@@ -86,6 +86,16 @@ void AWeapon::StartFire()
 		return;
 }
 
+void AWeapon::Reload()
+{
+	if (ReloadAnimMontage != nullptr && !IsReloading)
+	{
+		//Playing Reload Montage
+		Character->MulticastPlayAnimMontage(ReloadAnimMontage);
+		IsReloading = true;
+	}
+}
+
 bool AWeapon::HasEnoughAmmo()
 {
 	if (CurrentAmmo <= 0)
@@ -94,13 +104,7 @@ bool AWeapon::HasEnoughAmmo()
 		{
 			//Sending an RPC to the Client (Remember value is not being replicated its an audio clip)
 			Character->ClientPlaySound2D(NoAmmoSound);
-
-			if (ReloadAnimMontage != nullptr)
-			{
-				//Playing Reload Montage
-				Character->MulticastPlayAnimMontage(ReloadAnimMontage);
-				IsReloading = true;
-			}
+			Reload();
 		}
 
 		return false;

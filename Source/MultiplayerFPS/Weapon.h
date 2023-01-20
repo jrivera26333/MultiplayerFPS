@@ -10,6 +10,9 @@ class MULTIPLAYERFPS_API AWeapon : public AActor
 {
 	GENERATED_BODY()
 
+public:
+	void Reload();
+
 protected:
 
 	virtual void BeginPlay() override;
