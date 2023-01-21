@@ -25,6 +25,7 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 	FindPlayerStarts();
 }
 
+//Called after a successful login
 void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
