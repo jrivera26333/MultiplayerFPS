@@ -23,6 +23,9 @@ class MULTIPLAYERFPS_API AFPSPlayerController : public APlayerController
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Character")
+	USoundBase* TestSound;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Player Controller")
 	TSubclassOf<class UPlayerMenu> PlayerMenuClass;
 
@@ -61,6 +64,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerID(const FString& PlayerID) { SteamPlayerID = PlayerID; }
+
+	void ClientPlaySoundNotify(USoundBase* Sound);
 
 private:
 	

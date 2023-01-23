@@ -2,6 +2,7 @@
 #include "FPSCharacter.h"
 #include "PlayerMenu.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void AFPSPlayerController::BeginPlay()
 {
@@ -12,7 +13,7 @@ void AFPSPlayerController::BeginPlay()
 	{
 		return;		
 	}
-	
+
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
 	if (PlayerMenu != nullptr)
@@ -85,4 +86,10 @@ void AFPSPlayerController::ResetPlayerReference()
 	{
 		PlayerMenu->SetCharacterReference();
 	}
+}
+
+void AFPSPlayerController::ClientPlaySoundNotify(USoundBase* Sound)
+{
+	if(IsLocalController())
+		ClientPlaySound(Sound);
 }
