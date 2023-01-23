@@ -35,11 +35,7 @@ void AFPSCharacter::BeginPlay()
 
 	UGameplayStatics::PlaySound2D(GetWorld(), SpawnSound);
 
-	//!Server
-	if (!HasAuthority())
-	{
-		return;		
-	}
+	if (!HasAuthority()) return;
 
 	//SetHealth(MaxHealth);
 	SetHealth(MaxHealth);
@@ -51,7 +47,8 @@ void AFPSCharacter::BeginPlay()
 void AFPSCharacter::Restart()
 {
 	Super::Restart();
-	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 	if (LocalFPSController)
 	{
@@ -93,6 +90,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::OnAxisMoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::OnAxisLookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::OnAxisTurn);
+
+	UE_LOG(LogTemp, Warning, TEXT("Binded!"));
 }
 
 void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
