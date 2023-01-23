@@ -46,6 +46,8 @@ void AFPSCharacter::BeginPlay()
 	AddWeapon(WeaponClass);
 
 	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
+
+	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 }
 
 void AFPSCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -132,9 +134,6 @@ void AFPSCharacter::OnPressedScoreboard()
 
 void AFPSCharacter::OnPressedSettings()
 {
-	//ServerShowSettingsPage();
-	// 
-	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	UE_LOG(LogTemp, Warning, TEXT("Pressed from Char"));
 	if (LocalFPSController != nullptr)
 	{
@@ -236,6 +235,6 @@ void AFPSCharacter::FellOutOfWorld(const UDamageType& DmgType)
 void AFPSCharacter::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
-
-	UGameplayStatics::PlaySound2D(GetWorld(), LandSound);
+	if(LocalFPSController)
+		LocalFPSController->ClientPlaySound(LandSound);
 }
