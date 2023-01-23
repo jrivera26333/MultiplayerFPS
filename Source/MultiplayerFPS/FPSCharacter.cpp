@@ -48,15 +48,18 @@ void AFPSCharacter::Restart()
 {
 	Super::Restart();
 
-	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (IsLocallyControlled())
+	{
+		LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
-	if (LocalFPSController)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Possessed!"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Not Possessed!"));
+		if (LocalFPSController)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Possessed!"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not Possessed!"));
+		}
 	}
 }
 
@@ -147,7 +150,7 @@ void AFPSCharacter::OnPressedScoreboard()
 void AFPSCharacter::OnPressedSettings()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pressed from Char"));
-	if (LocalFPSController != nullptr)
+	if (LocalFPSController != nullptr && IsLocallyControlled())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Local: Pressed from Char"));
 		LocalFPSController->OpenSettingsMenu();
