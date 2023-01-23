@@ -46,8 +46,21 @@ void AFPSCharacter::BeginPlay()
 	AddWeapon(WeaponClass);
 
 	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
+}
 
+void AFPSCharacter::Restart()
+{
+	Super::Restart();
 	LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	if (LocalFPSController)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Possessed!"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not Possessed!"));
+	}
 }
 
 void AFPSCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -235,6 +248,6 @@ void AFPSCharacter::FellOutOfWorld(const UDamageType& DmgType)
 void AFPSCharacter::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
-	if (LocalFPSController)
+	if (LocalFPSController && IsLocallyControlled())
 		LocalFPSController->OwningClientPlaySound(LandSound);
 }
