@@ -235,6 +235,6 @@ void AFPSCharacter::FellOutOfWorld(const UDamageType& DmgType)
 void AFPSCharacter::Landed(const FHitResult& Hit)
 {
 	Super::Landed(Hit);
-	if(LocalFPSController)
-		LocalFPSController->ClientPlaySound(LandSound);
+	if (LocalFPSController)
+		LocalFPSController->OwningClientPlaySound(LandSound);
 }

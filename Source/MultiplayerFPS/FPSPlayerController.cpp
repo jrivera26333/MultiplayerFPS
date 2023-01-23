@@ -88,7 +88,7 @@ void AFPSPlayerController::ResetPlayerReference()
 	}
 }
 
-void AFPSPlayerController::ClientPlaySoundNotify(USoundBase* Sound)
+void AFPSPlayerController::OwningClientPlaySound(USoundBase* Sound)
 {
 	if(IsLocalController())
 		ClientPlaySound(Sound);

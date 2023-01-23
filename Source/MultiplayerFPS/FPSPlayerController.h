@@ -66,7 +66,7 @@ public:
 	void SetPlayerID(const FString& PlayerID) { SteamPlayerID = PlayerID; }
 
 	UFUNCTION(BlueprintCallable)
-	void ClientPlaySoundNotify(USoundBase* Sound);
+	void OwningClientPlaySound(USoundBase* Sound);
 
 private:
 	
