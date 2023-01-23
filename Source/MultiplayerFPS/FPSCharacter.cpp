@@ -37,10 +37,8 @@ void AFPSCharacter::BeginPlay()
 
 	if (!HasAuthority()) return;
 
-	//SetHealth(MaxHealth);
 	SetHealth(MaxHealth);
 	AddWeapon(WeaponClass);
-
 	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
@@ -50,7 +48,7 @@ void AFPSCharacter::Restart()
 
 	if (IsLocallyControlled())
 	{
-		LocalFPSController = Cast<AFPSPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		LocalFPSController = Cast<AFPSPlayerController>(GetController());
 
 		if (LocalFPSController)
 		{
