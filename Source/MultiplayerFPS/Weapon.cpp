@@ -146,12 +146,6 @@ void AWeapon::MulticastHitEmitter_Implementation(FVector PointOfImpact)
 	}
 }
 
-////Is being called by a notify so we need to update the server value for the ammunition
-//void AWeapon::ReloadWeapon()
-//{
-//	ServerReload();
-//}
-
 void AWeapon::ServerReload_Implementation()
 {
 	CurrentAmmo = AmmoClipSize;
