@@ -12,7 +12,6 @@ class MULTIPLAYERFPS_API AWeapon : public AActor
 
 public:
 	void Reload();
-	virtual void SetOwner(AActor* NewOwner) override;
 
 protected:
 
@@ -88,8 +87,7 @@ protected:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerReload();
 
-	//UFUNCTION(BlueprintCallable)
-	//void ReloadWeapon();
+	virtual void SetOwner(AActor* NewOwner) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetCurrentAmmo() const { return CurrentAmmo; };

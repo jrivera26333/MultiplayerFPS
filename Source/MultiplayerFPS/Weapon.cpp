@@ -52,24 +52,11 @@ void AWeapon::StartFire()
 
 	// Play the fire anim montage in all of the instances of the owning character
 	if (FireAnimMontage != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Fired Montage"));
 		Character->MulticastPlayAnimMontage(FireAnimMontage);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("!Fired Montage"));
-	}
+
 
 	if (MuzzleFlash != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Fired Emitter"));
 		MulticastMuzzleEmitter();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("!Fired Emitter"));
-	}
 
 	//Schedule the FireTimer depending on the value of the FireMode
 
@@ -188,13 +175,11 @@ void AWeapon::ServerStopFire_Implementation()
 //Attached Server RPC's
 void AWeapon::OnPressedFire()
 {
-	if(Character != nullptr)
-		ServerStartFire();
+	ServerStartFire();
 }
 
 //Attached Server RPC's
 void AWeapon::OnReleasedFire()
 {
-	if (Character != nullptr)
-		ServerStopFire();
+	ServerStopFire();
 }

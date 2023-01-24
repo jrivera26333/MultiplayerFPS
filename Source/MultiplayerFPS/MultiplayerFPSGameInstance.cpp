@@ -100,7 +100,7 @@ void UMultiplayerFPSGameInstance::LoadMainMenu()
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController != nullptr)) return;
 
-	PlayerController->ClientTravel("/Game/UI/WBP_GameplayMenu", ETravelType::TRAVEL_Absolute);
+	PlayerController->ClientTravel("/Game/Maps/MainMenu", ETravelType::TRAVEL_Absolute);
 }
 
 /// <summary>

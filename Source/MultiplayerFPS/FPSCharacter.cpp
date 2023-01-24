@@ -28,19 +28,17 @@ AFPSCharacter::AFPSCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-//Each Client gets a PlayerController on the Server which then replicates to its client. That's why we our replicating our weapon and setting a majority of our values there. Plus we don't want the client to be able to set values. No need in running it on both the Client and the Server
 void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	UGameplayStatics::PlaySound2D(GetWorld(), SpawnSound);
 
-	if (HasAuthority())
-	{
-		SetHealth(MaxHealth);
-		AddWeapon(WeaponClass);
-		GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
-	}
+	if (!HasAuthority()) return;
+
+	SetHealth(MaxHealth);
+	AddWeapon(WeaponClass);
+	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
 void AFPSCharacter::Restart()
@@ -83,8 +81,6 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::OnAxisMoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::OnAxisLookUp);
 	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::OnAxisTurn);
-
-	UE_LOG(LogTemp, Warning, TEXT("Binded!"));
 }
 
 void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -169,8 +165,6 @@ void AFPSCharacter::OnAxisTurn(float Value)
 
 void AFPSCharacter::AddWeapon(TSubclassOf<AWeapon> DesiredWeaponClass)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Called AddWeapon"));
-
 	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 
 	SpawnParameters.Owner = this;
