@@ -16,7 +16,6 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	ReloadWeapon();
 }
 
 void AWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -24,21 +23,13 @@ void AWeapon::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(AWeapon, CurrentAmmo, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(AWeapon, IsReloading, COND_OwnerOnly);
 }
 
 void AWeapon::SetOwner(AActor* NewOwner)
 {
 	Super::SetOwner(NewOwner);
 	Character = Cast<AFPSCharacter>(NewOwner);
-	
-	if (Character != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Not null"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Null"));
-	}
 }
 
 void AWeapon::StartFire()
@@ -62,12 +53,22 @@ void AWeapon::StartFire()
 	// Play the fire anim montage in all of the instances of the owning character
 	if (FireAnimMontage != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Fired Montage"));
 		Character->MulticastPlayAnimMontage(FireAnimMontage);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("!Fired Montage"));
 	}
 
 	if (MuzzleFlash != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Fired Emitter"));
 		MulticastMuzzleEmitter();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("!Fired Emitter"));
 	}
 
 	//Schedule the FireTimer depending on the value of the FireMode
@@ -88,11 +89,15 @@ void AWeapon::StartFire()
 
 void AWeapon::Reload()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Reload Called"));
+
+	FString BoolText = IsReloading ? "True" : "False";
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *BoolText);
 	if (ReloadAnimMontage != nullptr && !IsReloading)
 	{
 		//Playing Reload Montage
-		Character->MulticastPlayAnimMontage(ReloadAnimMontage);
 		IsReloading = true;
+		Character->MulticastPlayAnimMontage(ReloadAnimMontage);
 	}
 }
 
@@ -154,25 +159,23 @@ void AWeapon::MulticastHitEmitter_Implementation(FVector PointOfImpact)
 	}
 }
 
-//Is being called by a notify so we need to update the server value for the ammunition
-void AWeapon::ReloadWeapon()
-{
-	CurrentAmmo = AmmoClipSize;
-	ServerReload();
-
-
-	UE_LOG(LogTemp, Warning, TEXT("Current Ammo: %f"), CurrentAmmo);
-	//We had the IsReloading here however we are firing the weapon on the server so the bool was only getting changed on the client, so we added it to the ServerReload RPC
-}
+////Is being called by a notify so we need to update the server value for the ammunition
+//void AWeapon::ReloadWeapon()
+//{
+//	ServerReload();
+//}
 
 void AWeapon::ServerReload_Implementation()
 {
 	CurrentAmmo = AmmoClipSize;
 	IsReloading = false;
+
+	UE_LOG(LogTemp, Warning, TEXT("Reloaded From"));
 }
 
 void AWeapon::ServerStartFire_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Server Fired!"));
 	bWantsFire = true;
 	StartFire();
 }
@@ -185,13 +188,13 @@ void AWeapon::ServerStopFire_Implementation()
 //Attached Server RPC's
 void AWeapon::OnPressedFire()
 {
-	//Calling Implementation
-	ServerStartFire();
+	if(Character != nullptr)
+		ServerStartFire();
 }
 
 //Attached Server RPC's
 void AWeapon::OnReleasedFire()
 {
-	//Calling Implementation
-	ServerStopFire();
+	if (Character != nullptr)
+		ServerStopFire();
 }

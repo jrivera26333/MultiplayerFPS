@@ -12,6 +12,7 @@ class MULTIPLAYERFPS_API AWeapon : public AActor
 
 public:
 	void Reload();
+	virtual void SetOwner(AActor* NewOwner) override;
 
 protected:
 
@@ -48,6 +49,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	float FireRate = 1.0f;
 
+	UPROPERTY(Replicated)
 	bool IsReloading;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
@@ -73,8 +75,6 @@ protected:
 
 	AWeapon();
 
-	virtual void SetOwner(AActor* NewOwner) override;
-
 	void StartFire();
 
 	void FireHitscan(FVector FireLocation, FVector FireDirection);
@@ -85,11 +85,11 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerStopFire();
 
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerReload();
 
-	UFUNCTION(BlueprintCallable)
-	void ReloadWeapon();
+	//UFUNCTION(BlueprintCallable)
+	//void ReloadWeapon();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetCurrentAmmo() const { return CurrentAmmo; };

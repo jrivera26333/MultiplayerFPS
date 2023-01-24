@@ -35,11 +35,12 @@ void AFPSCharacter::BeginPlay()
 
 	UGameplayStatics::PlaySound2D(GetWorld(), SpawnSound);
 
-	if (!HasAuthority()) return;
-
-	SetHealth(MaxHealth);
-	AddWeapon(WeaponClass);
-	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (HasAuthority())
+	{
+		SetHealth(MaxHealth);
+		AddWeapon(WeaponClass);
+		GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
+	}
 }
 
 void AFPSCharacter::Restart()
@@ -49,15 +50,6 @@ void AFPSCharacter::Restart()
 	if (IsLocallyControlled())
 	{
 		LocalFPSController = Cast<AFPSPlayerController>(GetController());
-
-		if (LocalFPSController)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Possessed!"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Not Possessed!"));
-		}
 	}
 }
 
@@ -177,6 +169,8 @@ void AFPSCharacter::OnAxisTurn(float Value)
 
 void AFPSCharacter::AddWeapon(TSubclassOf<AWeapon> DesiredWeaponClass)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Called AddWeapon"));
+
 	FActorSpawnParameters SpawnParameters = FActorSpawnParameters();
 
 	SpawnParameters.Owner = this;
