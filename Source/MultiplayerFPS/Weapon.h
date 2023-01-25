@@ -10,9 +10,6 @@ class MULTIPLAYERFPS_API AWeapon : public AActor
 {
 	GENERATED_BODY()
 
-public:
-	void Reload();
-
 protected:
 
 	virtual void BeginPlay() override;
@@ -84,6 +81,9 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void ServerStopFire();
 
+	UFUNCTION(Server, Reliable)
+	void ServerReloadFire();
+
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ServerReload();
 
@@ -103,4 +103,5 @@ protected:
 public:
 	virtual void OnPressedFire();
 	virtual void OnReleasedFire();
+	virtual void OnPressedReload();
 };

@@ -37,6 +37,8 @@ void AFPSCharacter::BeginPlay()
 	if (!HasAuthority()) return;
 
 	SetHealth(MaxHealth);
+
+	//Client doesn't create a Gun but the server creates one in the server that is replicated to the client
 	AddWeapon(WeaponClass);
 	GameMode = Cast<AMultiplayerFPSGameModeBase>(GetWorld()->GetAuthGameMode());
 }
@@ -100,7 +102,8 @@ void AFPSCharacter::OnPressedReload()
 {
 	if (Weapon != nullptr)
 	{
-		Weapon->Reload();
+		UE_LOG(LogTemp, Warning, TEXT("Pressed Reload"));
+		Weapon->OnPressedReload();
 	}
 }
 
@@ -125,20 +128,16 @@ void AFPSCharacter::OnReleasedFire()
 /// </summary>
 void AFPSCharacter::OnPressedScoreboard()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pressed from Char"));
 	if (LocalFPSController != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Local: Pressed from Char"));
 		LocalFPSController->ToggleScoreboard();
 	}
 }
 
 void AFPSCharacter::OnPressedSettings()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pressed from Char"));
 	if (LocalFPSController != nullptr && IsLocallyControlled())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Local: Pressed from Char"));
 		LocalFPSController->OpenSettingsMenu();
 	}
 }

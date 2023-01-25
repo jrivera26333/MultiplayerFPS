@@ -32,6 +32,9 @@ void AWeapon::SetOwner(AActor* NewOwner)
 	Character = Cast<AFPSCharacter>(NewOwner);
 }
 
+/// <summary>
+/// Being called from the Server RPC
+/// </summary>
 void AWeapon::StartFire()
 {
 	// Abort if the trigger is no longer down OR if there is still time remaining in the FireTimer
@@ -74,29 +77,14 @@ void AWeapon::StartFire()
 		return;
 }
 
-void AWeapon::Reload()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Reload Called"));
-
-	FString BoolText = IsReloading ? "True" : "False";
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *BoolText);
-	if (ReloadAnimMontage != nullptr && !IsReloading)
-	{
-		//Playing Reload Montage
-		IsReloading = true;
-		Character->MulticastPlayAnimMontage(ReloadAnimMontage);
-	}
-}
-
 bool AWeapon::HasEnoughAmmo()
 {
 	if (CurrentAmmo <= 0)
 	{
 		if (NoAmmoSound != nullptr)
 		{
-			//Sending an RPC to the Client (Remember value is not being replicated its an audio clip)
 			Character->ClientPlaySound2D(NoAmmoSound);
-			Reload();
+			ServerReloadFire();
 		}
 
 		return false;
@@ -146,6 +134,8 @@ void AWeapon::MulticastHitEmitter_Implementation(FVector PointOfImpact)
 	}
 }
 
+//Server RPC's
+
 void AWeapon::ServerReload_Implementation()
 {
 	CurrentAmmo = AmmoClipSize;
@@ -166,14 +156,30 @@ void AWeapon::ServerStopFire_Implementation()
 	bWantsFire = false;
 }
 
+void AWeapon::ServerReloadFire_Implementation()
+{
+	// Weapon is being replicated from the Server to the Client. The bool is being toggled in the ReloadNotify
+
+	if (ReloadAnimMontage != nullptr && !IsReloading)
+	{
+		//Playing Reload Montage
+		IsReloading = true;
+		Character->MulticastPlayAnimMontage(ReloadAnimMontage);
+	}
+}
+
 //Attached Server RPC's
 void AWeapon::OnPressedFire()
 {
 	ServerStartFire();
 }
 
-//Attached Server RPC's
 void AWeapon::OnReleasedFire()
 {
 	ServerStopFire();
+}
+
+void AWeapon::OnPressedReload()
+{
+	ServerReloadFire();
 }
