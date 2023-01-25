@@ -3,6 +3,7 @@
 #include "PlayerMenu.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "FPSPlayerState.h"
 
 void AFPSPlayerController::BeginPlay()
 {

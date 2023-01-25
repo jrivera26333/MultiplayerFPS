@@ -178,7 +178,7 @@ void UMultiplayerFPSGameInstance::CreateSession()
 			SessionSettings.bUseLobbiesIfAvailable = true;
 		}
 
-		SessionSettings.NumPublicConnections = 5;
+		SessionSettings.NumPublicConnections = 2;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.Set(SERVER_NAME_SETTINGS_KEY, DesiredServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
