@@ -37,6 +37,8 @@ void AWeapon::SetOwner(AActor* NewOwner)
 /// </summary>
 void AWeapon::StartFire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Firing Server!"));
+
 	// Abort if the trigger is no longer down OR if there is still time remaining in the FireTimer
 	if (!bWantsFire || GetWorldTimerManager().GetTimerRemaining(FireTimer) > 0.0f || IsReloading)
 		return;
@@ -146,7 +148,6 @@ void AWeapon::ServerReload_Implementation()
 
 void AWeapon::ServerStartFire_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Server Fired!"));
 	bWantsFire = true;
 	StartFire();
 }
@@ -171,6 +172,7 @@ void AWeapon::ServerReloadFire_Implementation()
 //Attached Server RPC's
 void AWeapon::OnPressedFire()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Calling Firing Server!"));
 	ServerStartFire();
 }
 

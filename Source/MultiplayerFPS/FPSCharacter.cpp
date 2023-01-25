@@ -102,7 +102,6 @@ void AFPSCharacter::OnPressedReload()
 {
 	if (Weapon != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Pressed Reload"));
 		Weapon->OnPressedReload();
 	}
 }
