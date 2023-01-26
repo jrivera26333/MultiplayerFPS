@@ -30,17 +30,23 @@ void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
-	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(NewPlayer);
-	LoggedInPlayer->SetPlayerNumber(NumberOfPlayers);
+	AFPSPlayerController* LoggedPlayerController = Cast<AFPSPlayerController>(NewPlayer);
 
-	++NumberOfPlayers;
-
-	if (NumberOfPlayers >= 2)
+	if (LoggedPlayerController)
 	{
-		GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 10);
+		PlayersLoggedIn.Add(LoggedPlayerController);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Set Player Point: %i"), LoggedInPlayer->GetPlayerNumber());
+	for (auto LoggedInPlayer : PlayersLoggedIn)
+	{
+		LoggedInPlayer->AddPlayerLoggedIn(LoggedPlayerController);
+	}
+
+	++NumberOfPlayers;
+	if (NumberOfPlayers >= 2)
+	{
+		GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 5);
+	}
 }
 
 void AMultiplayerFPSGameModeBase::StartGame()
@@ -57,17 +63,6 @@ void AMultiplayerFPSGameModeBase::StartGame()
 
 	bUseSeamlessTravel = true;
 	World->ServerTravel("/Game/Maps/Main?listen");
-}
-
-void AMultiplayerFPSGameModeBase::GetFarthestPlayerStart()
-{
-	if (CurrentGameState->PlayerArray.Num() <= 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Could not find Players"));
-		return;
-	}
-	else
-		UE_LOG(LogTemp, Warning, TEXT("Players Found: %s"), *FString::FromInt(CurrentGameState->PlayerArray.Num()));
 }
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
@@ -188,11 +183,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		{
 			//Stats are can be added as a Player State. However its not unheard of assigning them in the GameState as well for all Widgets to easily handle
 			KillerPlayerState->AddKill();
-
-			//Used to find the farthest away spawn point
-			LastKnownKiller = KillerPlayerState->GetPawn();
-
-			UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *LastKnownKiller->GetName());
 		}
 
 		// Show the kill on the killer's HUD
@@ -233,6 +223,8 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 
 AActor* AMultiplayerFPSGameModeBase::InitialSpawn(AFPSPlayerController* LoggedInPlayer)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Spawned!"));
+
 	//If player has not been spawned
 	if (!LoggedInPlayer->GetHasSpawnBeenSet())
 	{

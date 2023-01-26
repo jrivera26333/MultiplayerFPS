@@ -55,6 +55,7 @@ public:
 	void AddAbilityPortraits();
 	void AddWeaponPortrait();
 	void ResetPlayerReference();
+	void AddPlayerLoggedIn(class AFPSPlayerController* PlayerLogged) { PlayerLoggedIn.Add(PlayerLogged); };
 
 	void SetPlayerNumber(int32 PlayerCount) { PlayerNumber = PlayerCount; };
 	int32 GetPlayerNumber() { return PlayerNumber; };
@@ -74,4 +75,10 @@ private:
 	bool HasSpawnBeenSet;
 
 	FString SteamPlayerID;
+
+	UPROPERTY(ReplicatedUsing = UpdatePlayersUI)
+	TArray<class AFPSPlayerController*> PlayerLoggedIn;
+
+	UFUNCTION()
+	void UpdatePlayersUI();
 };

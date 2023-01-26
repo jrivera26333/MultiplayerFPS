@@ -18,6 +18,9 @@ public:
 	void OpenSettingsMenu();
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void RefreshPlayerUI();
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void SetScoreboardVisibility(bool bIsVisible);
 
 	UFUNCTION(BlueprintImplementableEvent)

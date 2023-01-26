@@ -4,6 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "FPSPlayerState.h"
+#include "Net/UnrealNetwork.h"
 
 void AFPSPlayerController::BeginPlay()
 {
@@ -22,8 +23,16 @@ void AFPSPlayerController::BeginPlay()
 		PlayerMenu->AddToViewport(0);
 		AddAbilityPortraits();
 		AddWeaponPortrait();
+		//UpdatePlayersUI();
 	}
 }
+
+void AFPSPlayerController::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION(AFPSPlayerController, PlayerLoggedIn, COND_OwnerOnly);
+}
+
 
 void AFPSPlayerController::ToggleScoreboard()
 {
@@ -40,6 +49,15 @@ void AFPSPlayerController::OpenSettingsMenu()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Settings Opened!"));
 		PlayerMenu->OpenSettingsMenu();
+	}
+}
+
+void AFPSPlayerController::UpdatePlayersUI()
+{
+	if (PlayerMenu != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Players Menu"));
+		PlayerMenu->RefreshPlayerUI();
 	}
 }
 

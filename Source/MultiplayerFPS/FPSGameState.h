@@ -22,7 +22,6 @@ public:
 
 	TArray<FString> PlayerNames[2];
 	void SetKillLimit(int32 NewKillLimit) { KillLimit = NewKillLimit; }
-	TArray<APlayerState*> AFPSGameState::GetPlayerStates(){ return PlayerArray; }
 
 private:
 	int PlayerNamesAdded = 0;

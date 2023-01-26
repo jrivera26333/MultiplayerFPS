@@ -36,26 +36,18 @@ public:
 	void OnKill(AController* KillerController, AController* VictimController);
 
 private:
-	void GetFarthestPlayerStart();
+
+	void StartGame();
 	void FindPlayerStarts();
 
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
 
 	UPROPERTY()
-	TArray<APlayerController*> ConnectedPlayers;
-
-	bool HasSpawnedCharacter;
-
-	void StartGame();
-
-	UPROPERTY()
-	AActor* LastKnownKiller;
+	TArray<class AFPSPlayerController*> PlayersLoggedIn;
 
 	UPROPERTY()
 	class AFPSGameState* CurrentGameState;
-
-	TArray<int> SpawnedIndexes;
 
 	uint32 NumberOfPlayers = 0;
 	uint32 SpawnCounter = 0;
