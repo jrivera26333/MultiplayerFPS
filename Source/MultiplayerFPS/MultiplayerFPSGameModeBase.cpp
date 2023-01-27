@@ -42,7 +42,7 @@ void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 	{
 		if (!PlayersLoggedIn.Contains(LoggedPlayerController))
 		{
-			PlayersLoggedIn.Add(NewPlayer);
+			PlayersLoggedIn.Add(LoggedPlayerController);
 		}
 	}
 
@@ -71,7 +71,12 @@ void AMultiplayerFPSGameModeBase::StartGame()
 	HasStartedTraveling = true;
 }
 
-void AMultiplayerFPSGameModeBase::SpawnInitialPlayer(AController* PlayerController)
+void AMultiplayerFPSGameModeBase::SpawnPlayerTest()
+{
+
+}
+
+void AMultiplayerFPSGameModeBase::SpawnInitialPlayer(AFPSPlayerController* PlayerController)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, FString::Printf(TEXT("Player Controller: %s"), *PlayerController->GetName()));
 	DefaultPawnClass = AFPSCharacter::StaticClass();

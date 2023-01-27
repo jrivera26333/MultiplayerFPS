@@ -41,14 +41,15 @@ private:
 	bool HasStartedTraveling;
 
 	void StartGame();
-	void SpawnInitialPlayer(AController* PlayerController);
+	void SpawnInitialPlayer(class AFPSPlayerController* PlayerController);
 	void FindPlayerStarts();
+	void SpawnPlayerTest();
 
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
 
 	UPROPERTY()
-	TArray<APlayerController*> PlayersLoggedIn;
+	TArray<class AFPSPlayerController*> PlayersLoggedIn;
 
 	UPROPERTY()
 	class AFPSGameState* CurrentGameState;
