@@ -25,6 +25,7 @@ protected:
 
 	//Called after a successful login.This is the first place it is safe to call replicated functions on the PlayerController.
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void PostSeamlessTravel() override;
 	virtual void GenericPlayerInitialization(AController* Controller) override;
 
 	void RestartMap();

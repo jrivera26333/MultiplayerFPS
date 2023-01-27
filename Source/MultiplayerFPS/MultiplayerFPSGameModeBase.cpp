@@ -28,9 +28,7 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 
 void AMultiplayerFPSGameModeBase::GenericPlayerInitialization(AController* Controller)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("GenericPlayerInitialization Called")));
-
-
+	GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, FString::Printf(TEXT("GenericPlayerInitialization Called")));
 }
 
 //Called after a successful login
@@ -58,6 +56,11 @@ void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 	{
 		GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 5);
 	}
+}
+
+void AMultiplayerFPSGameModeBase::PostSeamlessTravel()
+{
+
 }
 
 void AMultiplayerFPSGameModeBase::StartGame()

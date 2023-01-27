@@ -39,6 +39,7 @@ protected:
 	UTexture2D* WeaponPortrait;
 
 	virtual void BeginPlay() override;
+	virtual void NotifyLoadedWorld(FName WorldPackageName, bool bFinalDest);
 
 public:
 
