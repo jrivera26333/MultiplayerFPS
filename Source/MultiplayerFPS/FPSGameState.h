@@ -22,7 +22,4 @@ public:
 
 	TArray<FString> PlayerNames[2];
 	void SetKillLimit(int32 NewKillLimit) { KillLimit = NewKillLimit; }
-
-private:
-	int PlayerNamesAdded = 0;
 };

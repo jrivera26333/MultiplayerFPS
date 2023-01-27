@@ -52,10 +52,18 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientShowScoreboard();
 
+	UFUNCTION(Client, Reliable)
+	void ClientUpdatePlayersUI();
+
+	UFUNCTION(Server, Reliable)
+	void ServerGetPlayerNames(const TArray<FString>& PlayerNamesRecieved);
+
+	UFUNCTION()
+	void UpdatePlayersUI();
+
 	void AddAbilityPortraits();
 	void AddWeaponPortrait();
 	void ResetPlayerReference();
-	void AddPlayerLoggedIn(class AFPSPlayerController* PlayerLogged) { PlayerLoggedIn.Add(PlayerLogged); };
 
 	void SetPlayerNumber(int32 PlayerCount) { PlayerNumber = PlayerCount; };
 	int32 GetPlayerNumber() { return PlayerNumber; };
@@ -69,6 +77,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OwningClientPlaySound(USoundBase* Sound);
 
+	UFUNCTION(BlueprintCallable)
+	TArray<FString> GetPlayerNamesLoggedIn() const { return PlayerNamesLoggedIn; };
+	void AddPlayersLoggedIn(FString PlayerLogged) { PlayerNamesLoggedIn.Add(PlayerLogged); };
+
 private:
 	
 	int32 PlayerNumber;
@@ -77,8 +89,5 @@ private:
 	FString SteamPlayerID;
 
 	UPROPERTY(ReplicatedUsing = UpdatePlayersUI)
-	TArray<class AFPSPlayerController*> PlayerLoggedIn;
-
-	UFUNCTION()
-	void UpdatePlayersUI();
+	TArray<FString> PlayerNamesLoggedIn;
 };

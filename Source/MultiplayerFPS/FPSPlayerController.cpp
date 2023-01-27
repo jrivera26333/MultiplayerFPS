@@ -9,6 +9,7 @@
 void AFPSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Controller Begin Play!"));
 
 	//Allows only client (listen server included to create UI)
 	if (!IsLocalController() || PlayerMenuClass == nullptr)
@@ -16,6 +17,7 @@ void AFPSPlayerController::BeginPlay()
 		return;		
 	}
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu created")));
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
 	if (PlayerMenu != nullptr)
@@ -23,16 +25,27 @@ void AFPSPlayerController::BeginPlay()
 		PlayerMenu->AddToViewport(0);
 		AddAbilityPortraits();
 		AddWeaponPortrait();
-		//UpdatePlayersUI();
 	}
 }
 
 void AFPSPlayerController::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME_CONDITION(AFPSPlayerController, PlayerLoggedIn, COND_OwnerOnly);
+	DOREPLIFETIME(AFPSPlayerController, PlayerNamesLoggedIn);
 }
 
+void AFPSPlayerController::UpdatePlayersUI()
+{
+	if (PlayerMenu != nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu Refreshed")));
+		PlayerMenu->RefreshPlayerUI();
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu Failed")));
+	}
+}
 
 void AFPSPlayerController::ToggleScoreboard()
 {
@@ -52,13 +65,24 @@ void AFPSPlayerController::OpenSettingsMenu()
 	}
 }
 
-void AFPSPlayerController::UpdatePlayersUI()
+//Called from GameMode
+void AFPSPlayerController::ServerGetPlayerNames_Implementation(const TArray<FString>& PlayerNamesRecieved)
 {
-	if (PlayerMenu != nullptr)
+	for (FString Name : PlayerNamesRecieved)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Players Menu"));
-		PlayerMenu->RefreshPlayerUI();
+		PlayerNamesLoggedIn.Add(Name);
 	}
+
+	if (GetLocalRole() == ROLE_Authority)
+		UpdatePlayersUI();
+
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Players Recieved: %s"), *FString::FromInt(PlayerNamesLoggedIn.Num())));
+}
+
+//Called from GameMode
+void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
+{
+	UpdatePlayersUI();
 }
 
 //Called from GameMode

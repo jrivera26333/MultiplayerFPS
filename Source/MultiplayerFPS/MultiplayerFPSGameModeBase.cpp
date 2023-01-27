@@ -10,6 +10,7 @@
 #include "TimerManager.h"
 #include "MultiplayerFPSGameInstance.h"
 #include "Math/UnrealMathUtility.h"
+#include "Engine/Engine.h"
 
 //Game mode exists only on the server, and in our case Listen Server
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
@@ -25,22 +26,32 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 	FindPlayerStarts();
 }
 
+void AMultiplayerFPSGameModeBase::GenericPlayerInitialization(AController* Controller)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("GenericPlayerInitialization Called")));
+
+
+}
+
 //Called after a successful login
 void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Post Login")));
 	AFPSPlayerController* LoggedPlayerController = Cast<AFPSPlayerController>(NewPlayer);
 
 	if (LoggedPlayerController)
 	{
-		PlayersLoggedIn.Add(LoggedPlayerController);
+		if (!PlayersLoggedIn.Contains(LoggedPlayerController->GetPlayerState<AFPSPlayerState>()->GetPlayerName()))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added Player Name")));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Name Added: %s"), *LoggedPlayerController->GetPlayerState<AFPSPlayerState>()->GetPlayerName()));
+			PlayersLoggedIn.Add(LoggedPlayerController->GetPlayerState<AFPSPlayerState>()->GetPlayerName());
+		}
 	}
 
-	for (auto LoggedInPlayer : PlayersLoggedIn)
-	{
-		LoggedInPlayer->AddPlayerLoggedIn(LoggedPlayerController);
-	}
+	LoggedPlayerController->ServerGetPlayerNames(PlayersLoggedIn);
 
 	++NumberOfPlayers;
 	if (NumberOfPlayers >= 2)
