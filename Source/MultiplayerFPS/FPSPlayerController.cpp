@@ -28,16 +28,6 @@ void AFPSPlayerController::BeginPlay()
 	}
 }
 
-void AFPSPlayerController::NotifyLoadedWorld(FName WorldPackageName, bool bFinalDest)
-{
-	if (WorldPackageName == "Main")
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Main was loaded")));
-	}
-	else
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Was loaded: %s"), *WorldPackageName.ToString()));
-}
-
 void AFPSPlayerController::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

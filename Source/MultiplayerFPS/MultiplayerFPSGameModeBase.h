@@ -22,12 +22,10 @@ protected:
 	virtual void HandleMatchHasEnded() override;
 	virtual bool ReadyToEndMatch_Implementation() override;
 
-
 	//Called after a successful login.This is the first place it is safe to call replicated functions on the PlayerController.
 	virtual void PostLogin(APlayerController* NewPlayer) override;
-	virtual void PostSeamlessTravel() override;
-	virtual void GenericPlayerInitialization(AController* Controller) override;
 
+	virtual void Tick(float dt) override;
 	void RestartMap();
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
@@ -40,14 +38,17 @@ public:
 
 private:
 
+	bool HasStartedTraveling;
+
 	void StartGame();
+	void SpawnInitialPlayer(AController* PlayerController);
 	void FindPlayerStarts();
 
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
 
 	UPROPERTY()
-	TArray<FString> PlayersLoggedIn;
+	TArray<APlayerController*> PlayersLoggedIn;
 
 	UPROPERTY()
 	class AFPSGameState* CurrentGameState;
