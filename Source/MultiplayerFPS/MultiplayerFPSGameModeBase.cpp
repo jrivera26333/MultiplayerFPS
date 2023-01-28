@@ -71,9 +71,21 @@ void AMultiplayerFPSGameModeBase::StartGame()
 	HasStartedTraveling = true;
 }
 
-void AMultiplayerFPSGameModeBase::SpawnPlayerTest()
+void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerController)
 {
+	APawn* PlayerFPSPawn = PlayerController->GetPawn();
 
+	if (PlayerFPSPawn)
+		PlayerFPSPawn->Destroy();
+
+	auto Character = GetWorld()->SpawnActor<AFPSCharacter>(AFPSCharacter::StaticClass(), GetRandomSpawnTransform());
+	Character->PossessedBy(PlayerController);
+}
+
+FTransform AMultiplayerFPSGameModeBase::GetRandomSpawnTransform()
+{
+	int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
+	return PlayerStarts[RandomIndex]->GetActorTransform();
 }
 
 void AMultiplayerFPSGameModeBase::SpawnInitialPlayer(AFPSPlayerController* PlayerController)
@@ -154,8 +166,7 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 	{
 		for (auto PlayerController : PlayersLoggedIn)
 		{
-			SpawnInitialPlayer(PlayerController);
-			GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, FString::Printf(TEXT("Spawned Player")));
+			SpawnPlayerTest(PlayerController);
 		}
 
 		HasStartedTraveling = false;

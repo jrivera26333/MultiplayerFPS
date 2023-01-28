@@ -43,7 +43,8 @@ private:
 	void StartGame();
 	void SpawnInitialPlayer(class AFPSPlayerController* PlayerController);
 	void FindPlayerStarts();
-	void SpawnPlayerTest();
+	void SpawnPlayerTest(class AFPSPlayerController* PlayerController);
+	FTransform GetRandomSpawnTransform();
 
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
