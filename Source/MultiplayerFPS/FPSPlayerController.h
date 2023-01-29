@@ -39,6 +39,7 @@ protected:
 	UTexture2D* WeaponPortrait;
 
 	virtual void BeginPlay() override;
+	virtual void PostSeamlessTravel() override;
 
 public:
 
@@ -57,6 +58,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerGetPlayerNames(const TArray<FString>& PlayerNamesRecieved);
+
+	UFUNCTION(Server, Reliable)
+	void ServerUpdatedGMPlayerHasLoaded();
 
 	UFUNCTION()
 	void UpdatePlayersUI();

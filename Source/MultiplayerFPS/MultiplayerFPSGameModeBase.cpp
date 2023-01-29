@@ -1,7 +1,7 @@
 #include "MultiplayerFPSGameModeBase.h"
 #include "FPSPlayerState.h"
 #include "FPSGameState.h"
-#include "FPSCharacter.h"
+#include "FPSMachineGunSoldier.h"
 #include "FPSPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -12,10 +12,11 @@
 #include "Math/UnrealMathUtility.h"
 #include "Engine/Engine.h"
 
+const uint32 MAX_PLAYERS_IN_LOBBY = 2;
+
 //Game mode exists only on the server, and in our case Listen Server
 AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Game Mode!"));
 	//DefaultPawnClass = AFPSCharacter::StaticClass();
 
 	DefaultPawnClass = nullptr;
@@ -23,86 +24,125 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 	PlayerStateClass = AFPSPlayerState::StaticClass();
 	GameStateClass = AFPSGameState::StaticClass();
 
-	CurrentGameState = GetGameState<AFPSGameState>();
-	FindPlayerStarts();
-
+	CurrentGameState = GetGameState<AFPSGameState>();	
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-//Called after a successful login
-void AMultiplayerFPSGameModeBase::PostLogin(APlayerController* NewPlayer)
+void AMultiplayerFPSGameModeBase::BeginPlay()
 {
-	Super::PostLogin(NewPlayer);
+	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Begin Play Game Mode")));
+}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Post Login")));
+void AMultiplayerFPSGameModeBase::Tick(float dt)
+{
+	Super::Tick(dt);
 
-	AFPSPlayerController* LoggedPlayerController = Cast<AFPSPlayerController>(NewPlayer);
-
-	if (LoggedPlayerController)
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Currnet Loaded: %s"), *FString::FromInt(CurrentPlayersLoaded)));
+	if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
 	{
-		if (!PlayersLoggedIn.Contains(LoggedPlayerController))
+		for (auto PlayerController : PlayersLoggedIn)
 		{
-			PlayersLoggedIn.Add(LoggedPlayerController);
+			SpawnPlayerTest(PlayerController);
 		}
-	}
 
-	++NumberOfPlayers;
-	if (NumberOfPlayers >= 2)
-	{
-		GetWorldTimerManager().SetTimer(GameStartTimer, this, &AMultiplayerFPSGameModeBase::StartGame, 5);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned"), *FString::FromInt(NumTravellingPlayers)));
+		HasSpawnedPlayers = true;
+		//HasStartedTraveling = false;
 	}
 }
 
-void AMultiplayerFPSGameModeBase::StartGame()
+//void AMultiplayerFPSGameModeBase::GenericPlayerInitialization(AController* NewPlayer)
+//{
+//	Super::GenericPlayerInitialization(NewPlayer);
+//
+//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("GenericPlayerInitialization")));
+//
+//	AFPSPlayerController* LoggedPlayerController = Cast<AFPSPlayerController>(NewPlayer);
+//
+//	if (LoggedPlayerController)
+//	{
+//		if (!PlayersLoggedIn.Contains(LoggedPlayerController))
+//		{
+//			PlayersLoggedIn.Add(LoggedPlayerController);
+//			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
+//		}
+//	}
+//}
+
+void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerController* PlayerController)
 {
-	auto GameInstance = Cast<UMultiplayerFPSGameInstance>(GetGameInstance());
-	UE_LOG(LogTemp, Warning, TEXT("Starting Game"));
+	if (PlayerController)
+	{
+		if (!PlayersLoggedIn.Contains(PlayerController))
+		{
+			PlayersLoggedIn.Add(PlayerController);
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
+		}
+	}
 
-	if (GameInstance == nullptr) return;
+	CurrentPlayersLoaded++;
+}
 
-	GameInstance->StartSession();
-
-	UWorld* World = GetWorld();
-	if (!ensure(World != nullptr)) return;
-
-	bUseSeamlessTravel = true;
-
-	World->ServerTravel("/Game/Maps/Main?listen");
-	HasStartedTraveling = true;
+void AMultiplayerFPSGameModeBase::PostSeamlessTravel()
+{
+	Super::PostSeamlessTravel();
+	FindPlayerStarts();
 }
 
 void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerController)
 {
+	if (PlayerController == nullptr) return;
+
 	APawn* PlayerFPSPawn = PlayerController->GetPawn();
 
 	if (PlayerFPSPawn)
 		PlayerFPSPawn->Destroy();
 
-	auto Character = GetWorld()->SpawnActor<AFPSCharacter>(AFPSCharacter::StaticClass(), GetRandomSpawnTransform());
-	Character->PossessedBy(PlayerController);
-}
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-FTransform AMultiplayerFPSGameModeBase::GetRandomSpawnTransform()
-{
-	int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
-	return PlayerStarts[RandomIndex]->GetActorTransform();
-}
+	//auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(AFPSMachineGunSoldier::StaticClass(), PlayerStarts[0]->GetActorTransform());
+	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, SpawnParams);
 
-void AMultiplayerFPSGameModeBase::SpawnInitialPlayer(AFPSPlayerController* PlayerController)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, FString::Printf(TEXT("Player Controller: %s"), *PlayerController->GetName()));
-	DefaultPawnClass = AFPSCharacter::StaticClass();
-	RestartPlayer(PlayerController);
+	if (GetWorld() == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World was null!")));
+	}
+
+	if (MachineGunSoldierClass == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Machine Gun was null!")));
+	}
+
+	if (Character)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Possessed")));
+		PlayerController->Possess(Character);
+
+		FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
+		//Character->PossessedBy(PlayerController);
+
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Owner Name: %s"), *PlayerController->GetPawn()->GetName()));
+	}
+	else
+	{
+		FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character not Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
+	}
 }
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 {
-	TSubclassOf<AFPSPlayerStart> PlayerStart = AFPSPlayerStart::StaticClass();
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerStart, PlayerStarts);
+	TSubclassOf<APlayerStart> PlayerStartClass = APlayerStart::StaticClass();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerStartClass, PlayerStarts);
 }
 
 bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
 {
+	Super::ShouldSpawnAtStartSpot(Player);
+
 	// We want to spawn at a random location, not always in the same starting spot
 	return false;
 }
@@ -114,9 +154,7 @@ void AMultiplayerFPSGameModeBase::HandleMatchHasStarted()
 {
 	Super::HandleMatchHasStarted();
 
-	UE_LOG(LogTemp, Warning, TEXT("Match Started"));
 	// Tell the kill limit to the game state
-
 	AFPSGameState* FPSGameState = Cast<AFPSGameState>(GameState);
 
 	if (FPSGameState != nullptr)
@@ -131,7 +169,6 @@ void AMultiplayerFPSGameModeBase::HandleMatchHasEnded()
 {
 	Super::HandleMatchHasEnded();
 
-	UE_LOG(LogTemp, Warning, TEXT("Match Ended"));
 	TArray<AActor*> PlayerControllers;
 
 	UGameplayStatics::GetAllActorsOfClass(this, AFPSPlayerController::StaticClass(), PlayerControllers);
@@ -155,29 +192,10 @@ void AMultiplayerFPSGameModeBase::HandleMatchHasEnded()
 
 	FTimerHandle TimerHandle;
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMultiplayerFPSGameModeBase::RestartMap, 5.0f);
-	UE_LOG(LogTemp, Warning, TEXT("Restart Map Called!")); 
-}
-
-void AMultiplayerFPSGameModeBase::Tick(float dt)
-{
-	Super::Tick(dt);
-
-	if (NumTravellingPlayers <= 0 && HasStartedTraveling)
-	{
-		for (auto PlayerController : PlayersLoggedIn)
-		{
-			SpawnPlayerTest(PlayerController);
-		}
-
-		HasStartedTraveling = false;
-	}
 }
 
 void AMultiplayerFPSGameModeBase::RestartMap()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Map Name: %s"), *GetWorld()->GetName());
-	//GetWorld()->ServerTravel(GetWorld()->GetName(), false, false);
-
 	TArray<AActor*> PlayerControllers;
 	UGameplayStatics::GetAllActorsOfClass(this, AFPSPlayerController::StaticClass(), PlayerControllers);
 
@@ -266,31 +284,4 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 	}
 
 	
-}
-
-AActor* AMultiplayerFPSGameModeBase::InitialSpawn(AFPSPlayerController* LoggedInPlayer)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Spawned!"));
-
-	//If player has not been spawned
-	if (!LoggedInPlayer->GetHasSpawnBeenSet())
-	{
-		LoggedInPlayer->SetPlayerNumber(SpawnCounter);
-		LoggedInPlayer->SetHasSpawnBeenSet(true);
-		SpawnCounter++;
-	}
-
-	//Geting the Player Spawn Number and using that for the Spawn Array Index
-	if (PlayerStarts.IsValidIndex(LoggedInPlayer->GetPlayerNumber()))
-	{
-		return PlayerStarts[LoggedInPlayer->GetPlayerNumber()];
-	}
-
-	return PlayerStarts[PlayerStarts.Num() - 1];
-}
-
-AActor* AMultiplayerFPSGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
-{
-	AFPSPlayerController* LoggedInPlayer = Cast<AFPSPlayerController>(Player);
-	return InitialSpawn(LoggedInPlayer);
 }

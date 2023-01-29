@@ -12,39 +12,45 @@ class MULTIPLAYERFPS_API AMultiplayerFPSGameModeBase : public AGameMode
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	TSubclassOf<class AFPSMachineGunSoldier> MachineGunSoldierClass;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Multiplayer FPS Game Mode")
 	int32 KillLimit = 30;
 
 	AMultiplayerFPSGameModeBase();
-
-	virtual bool ShouldSpawnAtStartSpot(AController* Player) override;
-	virtual void HandleMatchHasStarted() override;
-	virtual void HandleMatchHasEnded() override;
-	virtual bool ReadyToEndMatch_Implementation() override;
-
-	//Called after a successful login.This is the first place it is safe to call replicated functions on the PlayerController.
-	virtual void PostLogin(APlayerController* NewPlayer) override;
-
+	virtual void BeginPlay() override;
 	virtual void Tick(float dt) override;
-	void RestartMap();
-	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
-	AActor* InitialSpawn(class AFPSPlayerController* LoggedInPlayer);
+	void RestartMap();
+
+	virtual void HandleMatchHasEnded() override;
+	virtual void HandleMatchHasStarted() override;
+	//virtual void GenericPlayerInitialization(AController* Controller) override;
+
+	virtual bool ReadyToEndMatch_Implementation() override;
+	virtual bool ShouldSpawnAtStartSpot(AController* Player) override;
+
+	//We are traveling from the Lobby so this will fire since we are switching gamemodes
+	virtual void PostSeamlessTravel() override;
+
 
 public:
 
-	bool HasWinner() const;
 	void OnKill(AController* KillerController, AController* VictimController);
+	bool HasWinner() const;
+	void AddToCurrentPlayersLoading(class AFPSPlayerController* PlayerController);
+
+	//Test (place in private)
+	void SpawnPlayerTest(class AFPSPlayerController* PlayerController);
 
 private:
 
 	bool HasStartedTraveling;
+	bool HasSpawnedPlayers;
 
 	void StartGame();
-	void SpawnInitialPlayer(class AFPSPlayerController* PlayerController);
 	void FindPlayerStarts();
-	void SpawnPlayerTest(class AFPSPlayerController* PlayerController);
-	FTransform GetRandomSpawnTransform();
 
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
@@ -55,8 +61,7 @@ private:
 	UPROPERTY()
 	class AFPSGameState* CurrentGameState;
 
-	uint32 NumberOfPlayers = 0;
-	uint32 SpawnCounter = 0;
+	uint32 CurrentPlayersLoaded = 0;
 
 	FTimerHandle GameStartTimer;
 };

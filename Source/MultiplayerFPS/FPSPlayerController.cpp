@@ -5,19 +5,28 @@
 #include "Kismet/GameplayStatics.h"
 #include "FPSPlayerState.h"
 #include "Net/UnrealNetwork.h"
+#include "MultiplayerFPSGameModeBase.h"
 
 void AFPSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Controller Begin Play!"));
 
-	//Allows only client (listen server included to create UI)
+	//This is a check for when we are the client and we are creating a PC on the server
 	if (!IsLocalController() || PlayerMenuClass == nullptr)
 	{
 		return;		
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu created")));
+	//if (GetLocalRole() == ROLE_Authority && IsLocalController())
+	//{
+	//	//TESTING
+	//	ServerUpdatedGMPlayerHasLoaded();
+	//}else if (GetLocalRole() == ROLE_AutonomousProxy && IsLocalController())
+	//{
+	//	//TESTING
+	//	ServerUpdatedGMPlayerHasLoaded();
+	//}
+
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
 	if (PlayerMenu != nullptr)
@@ -101,6 +110,23 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 	{
 		PlayerMenu->SetScoreboardVisibility(true);
 	}
+}
+
+void AFPSPlayerController::PostSeamlessTravel()
+{
+	Super::PostSeamlessTravel();
+	ServerUpdatedGMPlayerHasLoaded();
+}
+
+void AFPSPlayerController::ServerUpdatedGMPlayerHasLoaded_Implementation()
+{
+	AMultiplayerFPSGameModeBase* FPSGameMode = (AMultiplayerFPSGameModeBase*)GetWorld()->GetAuthGameMode();
+
+	if (FPSGameMode)
+		FPSGameMode->AddToCurrentPlayersLoading(this);
+
+	//if (FPSGameMode)
+	//	FPSGameMode->SpawnPlayerTest(this);
 }
 
 void AFPSPlayerController::AddAbilityPortraits()
