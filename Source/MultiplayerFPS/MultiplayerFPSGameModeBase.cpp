@@ -48,27 +48,8 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned"), *FString::FromInt(NumTravellingPlayers)));
 		HasSpawnedPlayers = true;
-		//HasStartedTraveling = false;
 	}
 }
-
-//void AMultiplayerFPSGameModeBase::GenericPlayerInitialization(AController* NewPlayer)
-//{
-//	Super::GenericPlayerInitialization(NewPlayer);
-//
-//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("GenericPlayerInitialization")));
-//
-//	AFPSPlayerController* LoggedPlayerController = Cast<AFPSPlayerController>(NewPlayer);
-//
-//	if (LoggedPlayerController)
-//	{
-//		if (!PlayersLoggedIn.Contains(LoggedPlayerController))
-//		{
-//			PlayersLoggedIn.Add(LoggedPlayerController);
-//			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
-//		}
-//	}
-//}
 
 void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerController* PlayerController)
 {
@@ -87,7 +68,7 @@ void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerCon
 void AMultiplayerFPSGameModeBase::PostSeamlessTravel()
 {
 	Super::PostSeamlessTravel();
-	FindPlayerStarts();
+	//FindPlayerStarts();
 }
 
 void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerController)
@@ -104,33 +85,10 @@ void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerCo
 
 	//auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(AFPSMachineGunSoldier::StaticClass(), PlayerStarts[0]->GetActorTransform());
 	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, SpawnParams);
+	PlayerController->Possess(Character);
 
-	if (GetWorld() == nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World was null!")));
-	}
-
-	if (MachineGunSoldierClass == nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Machine Gun was null!")));
-	}
-
-	if (Character)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Possessed")));
-		PlayerController->Possess(Character);
-
-		FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
-		//Character->PossessedBy(PlayerController);
-
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Owner Name: %s"), *PlayerController->GetPawn()->GetName()));
-	}
-	else
-	{
-		FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character not Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
-	}
+	FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
 }
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
