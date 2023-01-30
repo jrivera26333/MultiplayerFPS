@@ -56,6 +56,9 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientUpdatePlayersUI();
 
+	UFUNCTION(Client, Reliable)
+	void ClientCreatePlayerMenuWidget();
+
 	UFUNCTION(Server, Reliable)
 	void ServerGetPlayerNames(const TArray<FString>& PlayerNamesRecieved);
 

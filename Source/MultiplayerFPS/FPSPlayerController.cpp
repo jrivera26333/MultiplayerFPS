@@ -12,21 +12,6 @@ void AFPSPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Control Begin")));
-
-	//This is a check for when we are the client and we are creating a PC on the server
-	if (!IsLocalController() || PlayerMenuClass == nullptr)
-	{
-		return;		
-	}
-
-	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
-
-	if (PlayerMenu != nullptr)
-	{
-		PlayerMenu->AddToViewport(0);
-		AddAbilityPortraits();
-		AddWeaponPortrait();
-	}
 }
 
 void AFPSPlayerController::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
@@ -84,6 +69,25 @@ void AFPSPlayerController::ServerGetPlayerNames_Implementation(const TArray<FStr
 void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
 {
 	UpdatePlayersUI();
+}
+
+//Called from GameMode
+void AFPSPlayerController::ClientCreatePlayerMenuWidget_Implementation()
+{
+	//This is a check for when we are the client and we are creating a PC on the server
+	if (!IsLocalController() || PlayerMenuClass == nullptr)
+	{
+		return;
+	}
+
+	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
+
+	if (PlayerMenu != nullptr)
+	{
+		PlayerMenu->AddToViewport(0);
+		AddAbilityPortraits();
+		AddWeaponPortrait();
+	}
 }
 
 //Called from GameMode

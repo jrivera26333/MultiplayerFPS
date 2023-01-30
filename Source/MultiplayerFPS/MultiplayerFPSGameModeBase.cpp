@@ -87,8 +87,11 @@ void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerCo
 	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, SpawnParams);
 	PlayerController->Possess(Character);
 
-	FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
+	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
+	PlayerController->ClientCreatePlayerMenuWidget();
+
+	//FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
 }
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
