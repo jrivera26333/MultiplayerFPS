@@ -88,7 +88,7 @@ void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerCo
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
-	PlayerController->ClientCreatePlayerMenuWidget();
+	PlayerController->CreatePlayerMenuWidget();
 
 	//FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
