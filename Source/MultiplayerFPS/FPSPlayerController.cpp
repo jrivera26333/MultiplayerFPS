@@ -11,21 +11,13 @@ void AFPSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Control Begin")));
+
 	//This is a check for when we are the client and we are creating a PC on the server
 	if (!IsLocalController() || PlayerMenuClass == nullptr)
 	{
 		return;		
 	}
-
-	//if (GetLocalRole() == ROLE_Authority && IsLocalController())
-	//{
-	//	//TESTING
-	//	ServerUpdatedGMPlayerHasLoaded();
-	//}else if (GetLocalRole() == ROLE_AutonomousProxy && IsLocalController())
-	//{
-	//	//TESTING
-	//	ServerUpdatedGMPlayerHasLoaded();
-	//}
 
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
