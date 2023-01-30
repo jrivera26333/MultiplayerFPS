@@ -21,6 +21,9 @@ public:
 	void RefreshPlayerUI();
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void SetupPlayersUI();
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void SetScoreboardVisibility(bool bIsVisible);
 
 	UFUNCTION(BlueprintImplementableEvent)

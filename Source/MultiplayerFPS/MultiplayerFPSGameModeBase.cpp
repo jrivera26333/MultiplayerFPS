@@ -242,7 +242,5 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 			int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
 			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[RandomIndex]);
 		}
-	}
-
-	
+	}	
 }
