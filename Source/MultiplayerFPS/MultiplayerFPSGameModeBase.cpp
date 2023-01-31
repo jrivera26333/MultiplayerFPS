@@ -39,6 +39,8 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 
 	if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
 	{
+		AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
+
 		for (auto PlayerController : PlayersLoggedIn)
 		{
 			SpawnPlayerTest(PlayerController);
@@ -46,7 +48,7 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 
 		for (auto PlayerController : PlayersLoggedIn)
 		{
-			PlayerController->ClientUpdatePlayersUI();
+			PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
 		}
 
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));

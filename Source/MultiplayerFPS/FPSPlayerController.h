@@ -53,7 +53,7 @@ public:
 	void ClientShowScoreboard();
 
 	UFUNCTION(Client, Reliable)
-	void ClientUpdatePlayersUI();
+	void ClientUpdatePlayersUI(const TArray<APlayerState*>& PlayerStateArray);
 
 	UFUNCTION(Client, Reliable)
 	void CreatePlayerMenuWidget();
