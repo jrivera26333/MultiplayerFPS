@@ -74,12 +74,9 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 //Called from GameMode. TODO: Refactor and duplicate 
 void AFPSPlayerController::ClientUpdatePlayersUI_Implementation(const TArray<APlayerState*>& PlayerStateArray)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player State Amount: %s"), *FString::FromInt(PlayerStateArray.Num())));
-
-	////TODO: Refactor
 	if (PlayerMenu != nullptr)
 	{
-		PlayerMenu->SetupPlayersUI(PlayerStateArray);
+		PlayerMenu->SetupPlayersUI();
 	}
 }
 

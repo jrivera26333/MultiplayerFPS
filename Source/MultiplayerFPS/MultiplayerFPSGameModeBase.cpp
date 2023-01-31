@@ -67,11 +67,13 @@ void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerCon
 void AMultiplayerFPSGameModeBase::PostSeamlessTravel()
 {
 	Super::PostSeamlessTravel();
-	//FindPlayerStarts();
+	FindPlayerStarts();
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Finding PlayerStarts")));
 }
 
 void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerController)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned")));
 	if (PlayerController == nullptr) return;
 
 	APawn* PlayerFPSPawn = PlayerController->GetPawn();
@@ -82,7 +84,7 @@ void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerCo
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, SpawnParams);
+	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, PlayerStarts[FMath::RandRange(0, PlayerStarts.Num())]->GetTransform(), SpawnParams);
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
@@ -93,6 +95,8 @@ void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 {
 	TSubclassOf<APlayerStart> PlayerStartClass = APlayerStart::StaticClass();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), PlayerStartClass, PlayerStarts);
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("PlayerStarts Found: %s"),*FString::FromInt(PlayerStarts.Num())));
 }
 
 bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
