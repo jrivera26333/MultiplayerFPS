@@ -84,7 +84,7 @@ void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerCo
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, PlayerStarts[FMath::RandRange(0, PlayerStarts.Num())]->GetTransform(), SpawnParams);
+	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, PlayerStarts[FMath::RandRange(0, PlayerStarts.Num() - 1)]->GetTransform(), SpawnParams);
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
