@@ -38,9 +38,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Player Controller")
 	UTexture2D* WeaponPortrait;
 
-	virtual void BeginPlay() override;
-	virtual void PostSeamlessTravel() override;
-
 public:
 
 	void ToggleScoreboard();
@@ -59,41 +56,9 @@ public:
 	UFUNCTION(Client, Reliable)
 	void CreatePlayerMenuWidget();
 
-	UFUNCTION(Server, Reliable)
-	void ServerGetPlayerNames(const TArray<FString>& PlayerNamesRecieved);
-
-	UFUNCTION(Server, Reliable)
-	void ServerUpdatedGMPlayerHasLoaded();
-
-	UFUNCTION()
-	void UpdatePlayersUI();
-
 	void AddAbilityPortraits();
 	void AddWeaponPortrait();
-	void ResetPlayerReference();
-
-	void SetPlayerNumber(int32 PlayerCount) { PlayerNumber = PlayerCount; };
-	int32 GetPlayerNumber() { return PlayerNumber; };
-
-	void SetHasSpawnBeenSet(bool SpawnSet) { HasSpawnBeenSet = SpawnSet; };
-	bool GetHasSpawnBeenSet() { return HasSpawnBeenSet; };
-
-	void SetPlayerID(const FString& PlayerID) { SteamPlayerID = PlayerID; }
 
 	UFUNCTION(BlueprintCallable)
 	void OwningClientPlaySound(USoundBase* Sound);
-
-	UFUNCTION(BlueprintCallable)
-	TArray<FString> GetPlayerNamesLoggedIn() const { return PlayerNamesLoggedIn; };
-	void AddPlayersLoggedIn(FString PlayerLogged) { PlayerNamesLoggedIn.Add(PlayerLogged); };
-
-private:
-	
-	int32 PlayerNumber;
-	bool HasSpawnBeenSet;
-
-	FString SteamPlayerID;
-
-	UPROPERTY(ReplicatedUsing = UpdatePlayersUI)
-	TArray<FString> PlayerNamesLoggedIn;
 };

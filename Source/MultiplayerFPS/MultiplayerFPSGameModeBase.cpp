@@ -51,7 +51,7 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 
 		for (auto PlayerController : PlayersLoggedIn)
 		{
-			PlayerController->UpdatePlayersUI();
+			PlayerController->ClientUpdatePlayersUI();
 		}
 	}
 }

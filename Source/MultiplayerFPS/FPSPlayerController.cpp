@@ -7,18 +7,7 @@
 #include "Net/UnrealNetwork.h"
 #include "MultiplayerFPSGameModeBase.h"
 
-void AFPSPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AFPSPlayerController::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AFPSPlayerController, PlayerNamesLoggedIn);
-}
-
-void AFPSPlayerController::UpdatePlayersUI()
+void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
 {
 	if (PlayerMenu != nullptr)
 	{
@@ -43,26 +32,6 @@ void AFPSPlayerController::OpenSettingsMenu()
 		UE_LOG(LogTemp, Warning, TEXT("Settings Opened!"));
 		PlayerMenu->OpenSettingsMenu();
 	}
-}
-
-//Called from GameMode
-void AFPSPlayerController::ServerGetPlayerNames_Implementation(const TArray<FString>& PlayerNamesRecieved)
-{
-	for (FString Name : PlayerNamesRecieved)
-	{
-		PlayerNamesLoggedIn.Add(Name);
-	}
-
-	if (GetLocalRole() == ROLE_Authority)
-		UpdatePlayersUI();
-
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Players Recieved: %s"), *FString::FromInt(PlayerNamesLoggedIn.Num())));
-}
-
-//Called from GameMode
-void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
-{
-	UpdatePlayersUI();
 }
 
 //Called from GameMode
@@ -100,23 +69,6 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 	}
 }
 
-void AFPSPlayerController::PostSeamlessTravel()
-{
-	Super::PostSeamlessTravel();
-	ServerUpdatedGMPlayerHasLoaded();
-}
-
-void AFPSPlayerController::ServerUpdatedGMPlayerHasLoaded_Implementation()
-{
-	AMultiplayerFPSGameModeBase* FPSGameMode = (AMultiplayerFPSGameModeBase*)GetWorld()->GetAuthGameMode();
-
-	if (FPSGameMode)
-		FPSGameMode->AddToCurrentPlayersLoading(this);
-
-	//if (FPSGameMode)
-	//	FPSGameMode->SpawnPlayerTest(this);
-}
-
 void AFPSPlayerController::AddAbilityPortraits()
 {
 	if (Abilities.Num() > 0)
@@ -134,14 +86,6 @@ void AFPSPlayerController::AddWeaponPortrait()
 	if (WeaponPortrait != nullptr)
 	{
 		PlayerMenu->SetWeaponPortrait(WeaponPortrait);
-	}
-}
-
-void AFPSPlayerController::ResetPlayerReference()
-{
-	if (PlayerMenu != nullptr)
-	{
-		PlayerMenu->SetCharacterReference();
 	}
 }
 
