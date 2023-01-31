@@ -12,9 +12,6 @@ class MULTIPLAYERFPS_API AMultiplayerFPSGameModeBase : public AGameMode
 
 protected:
 
-	virtual void BeginPlay() override;
-	virtual void Tick(float dt) override;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	TSubclassOf<class AFPSMachineGunSoldier> MachineGunSoldierClass;
 
@@ -26,8 +23,6 @@ protected:
 	void RestartMap();
 
 	virtual void HandleMatchHasEnded() override;
-	virtual void HandleMatchHasStarted() override;
-	//virtual void GenericPlayerInitialization(AController* Controller) override;
 
 	virtual bool ReadyToEndMatch_Implementation() override;
 	virtual bool ShouldSpawnAtStartSpot(AController* Player) override;

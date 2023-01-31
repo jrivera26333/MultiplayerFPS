@@ -2,13 +2,6 @@
 #include "Net/UnrealNetwork.h"
 #include "FPSPlayerState.h"
 
-void AFPSGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AFPSGameState, KillLimit);
-}
-
 TArray<AFPSPlayerState*> AFPSGameState::GetPlayerStatesOrderedByKills() const
 {
 	TArray<AFPSPlayerState*> PlayerStates;
