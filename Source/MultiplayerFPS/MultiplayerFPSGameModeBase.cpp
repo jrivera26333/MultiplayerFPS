@@ -48,6 +48,11 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
 		HasSpawnedPlayers = true;
+
+		for (auto PlayerController : PlayersLoggedIn)
+		{
+			PlayerController->UpdatePlayersUI();
+		}
 	}
 }
 

@@ -23,11 +23,7 @@ void AFPSPlayerController::UpdatePlayersUI()
 	if (PlayerMenu != nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu Refreshed")));
-		PlayerMenu->RefreshPlayerUI();
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu Failed")));
+		PlayerMenu->SetupPlayersUI();
 	}
 }
 
