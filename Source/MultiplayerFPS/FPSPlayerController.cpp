@@ -6,6 +6,7 @@
 #include "FPSPlayerState.h"
 #include "Net/UnrealNetwork.h"
 #include "MultiplayerFPSGameModeBase.h"
+#include "FPSGameState.h"
 
 void AFPSPlayerController::PostSeamlessTravel()
 {
@@ -71,12 +72,14 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 	}
 }
 
-//Called from GameMode
+//Called from GameMode. TODO: Refactor and duplicate 
 void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
 {
-	if (PlayerMenu != nullptr)
+	AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
+
+	if (PlayerMenu != nullptr && FPSGameState)
 	{
-		PlayerMenu->SetupPlayersUI();
+		PlayerMenu->SetupPlayersUI(FPSGameState->PlayerArray);
 	}
 }
 

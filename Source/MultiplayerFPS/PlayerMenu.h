@@ -18,10 +18,7 @@ public:
 	void OpenSettingsMenu();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void RefreshPlayerUI();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void SetupPlayersUI();
+	void SetupPlayersUI(const TArray<APlayerState*>& PlayerStateArray);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetScoreboardVisibility(bool bIsVisible);

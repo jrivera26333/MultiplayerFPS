@@ -37,35 +37,6 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 {
 	Super::Tick(dt);
 
-	//if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
-	//{
-	//	for (auto PlayerController : PlayersLoggedIn)
-	//	{
-	//		SpawnPlayerTest(PlayerController);
-	//	}
-
-	//	for (auto PlayerController : PlayersLoggedIn)
-	//	{
-	//		PlayerController->ClientUpdatePlayersUI();
-	//	}
-
-	//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
-	//	HasSpawnedPlayers = true;
-	//}
-}
-
-void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerController* AddedPlayerController)
-{
-	if (AddedPlayerController)
-	{
-		if (!PlayersLoggedIn.Contains(AddedPlayerController))
-		{
-			PlayersLoggedIn.Add(AddedPlayerController);
-			++CurrentPlayersLoaded;
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
-		}
-	}
-
 	if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
 	{
 		for (auto PlayerController : PlayersLoggedIn)
@@ -80,6 +51,19 @@ void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerCon
 
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
 		HasSpawnedPlayers = true;
+	}
+}
+
+void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerController* AddedPlayerController)
+{
+	if (AddedPlayerController)
+	{
+		if (!PlayersLoggedIn.Contains(AddedPlayerController))
+		{
+			PlayersLoggedIn.Add(AddedPlayerController);
+			++CurrentPlayersLoaded;
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
+		}
 	}
 }
 
