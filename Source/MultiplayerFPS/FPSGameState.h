@@ -14,6 +14,8 @@ protected:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "FPS Game State")
 	int32 KillLimit;
 
+	virtual void PostInitializeComponents() override;
+
 public:
 
 	//Referenced in Widget
