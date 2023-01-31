@@ -76,16 +76,11 @@ void AFPSPlayerController::ClientUpdatePlayersUI_Implementation(const TArray<APl
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player State Amount: %s"), *FString::FromInt(PlayerStateArray.Num())));
 
-	//for (auto index : PlayerStateArray)
-	//{
-	//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Names: %s"), *PlayerStateArray[0]->GetPlayerName()));
-	//}
-
 	////TODO: Refactor
-	//if (PlayerMenu != nullptr)
-	//{
-	//	PlayerMenu->SetupPlayersUI(PlayerStateArray);
-	//}
+	if (PlayerMenu != nullptr)
+	{
+		PlayerMenu->SetupPlayersUI(PlayerStateArray);
+	}
 }
 
 void AFPSPlayerController::AddAbilityPortraits()

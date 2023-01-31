@@ -28,11 +28,6 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AMultiplayerFPSGameModeBase::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void AMultiplayerFPSGameModeBase::Tick(float dt)
 {
 	Super::Tick(dt);
