@@ -23,20 +23,22 @@ class MULTIPLAYERFPS_API AFPSPlayerController : public APlayerController
 
 protected:
 
+	UPROPERTY()
+	class UPlayerMenu* PlayerMenu;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Character")
 	USoundBase* TestSound;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Player Controller")
 	TSubclassOf<class UPlayerMenu> PlayerMenuClass;
 
-	UPROPERTY()
-	class UPlayerMenu* PlayerMenu;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Player Controller")
 	TArray<FAbilitySets> Abilities;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS Player Controller")
 	UTexture2D* WeaponPortrait;
+	
+	virtual void PostSeamlessTravel() override;
 
 public:
 

@@ -19,8 +19,6 @@ protected:
 	int32 KillLimit = 30;
 
 	AMultiplayerFPSGameModeBase();
-	virtual void BeginPlay() override;
-	virtual void Tick(float dt) override;
 
 	void RestartMap();
 
@@ -62,6 +60,5 @@ private:
 	class AFPSGameState* CurrentGameState;
 
 	uint32 CurrentPlayersLoaded = 0;
-
 	FTimerHandle GameStartTimer;
 };

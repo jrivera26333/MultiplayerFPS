@@ -16,6 +16,17 @@ void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
 	}
 }
 
+void AFPSPlayerController::PostSeamlessTravel()
+{
+	Super::PostSeamlessTravel();
+
+	//Updating GM we have loaded into the level
+	AMultiplayerFPSGameModeBase* FPSGameMode = (AMultiplayerFPSGameModeBase*)GetWorld()->GetAuthGameMode();
+
+	if (FPSGameMode)
+		FPSGameMode->AddToCurrentPlayersLoading(this);
+}
+
 void AFPSPlayerController::ToggleScoreboard()
 {
 	if (PlayerMenu != nullptr)
