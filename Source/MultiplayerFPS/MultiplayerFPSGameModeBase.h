@@ -23,6 +23,8 @@ protected:
 	void RestartMap();
 
 	virtual void HandleMatchHasEnded() override;
+	virtual void HandleMatchHasStarted() override;
+	//virtual void GenericPlayerInitialization(AController* Controller) override;
 
 	virtual bool ReadyToEndMatch_Implementation() override;
 	virtual bool ShouldSpawnAtStartSpot(AController* Player) override;

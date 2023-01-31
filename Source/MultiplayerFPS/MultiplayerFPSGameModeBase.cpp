@@ -98,6 +98,21 @@ bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
 }
 
 /// <summary>
+/// The reason for setting the KillLimit on the GameState is because it can be easily accessed to Clients. In our case the widget.
+/// </summary>
+void AMultiplayerFPSGameModeBase::HandleMatchHasStarted()
+{
+	Super::HandleMatchHasStarted();
+
+	// Tell the kill limit to the game state
+	AFPSGameState* FPSGameState = Cast<AFPSGameState>(GameState);
+
+	if (FPSGameState != nullptr)
+	{
+		FPSGameState->SetKillLimit(KillLimit);
+	}
+}
+/// <summary>
 /// Called when ReadyToEndMatch returns true
 /// </summary>
 void AMultiplayerFPSGameModeBase::HandleMatchHasEnded()
