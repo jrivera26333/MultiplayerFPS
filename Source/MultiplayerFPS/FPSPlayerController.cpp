@@ -12,8 +12,6 @@ void AFPSPlayerController::PostSeamlessTravel()
 {
 	Super::PostSeamlessTravel();
 
-	if (!IsLocalController()) return;
-
 	//Updating GM we have loaded into the level
 	AMultiplayerFPSGameModeBase* FPSGameMode = (AMultiplayerFPSGameModeBase*)GetWorld()->GetAuthGameMode();
 
