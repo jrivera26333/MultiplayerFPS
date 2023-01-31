@@ -12,9 +12,6 @@ class MULTIPLAYERFPS_API AMultiplayerFPSGameModeBase : public AGameMode
 
 protected:
 
-	virtual void BeginPlay() override;
-	virtual void Tick(float dt) override;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	TSubclassOf<class AFPSMachineGunSoldier> MachineGunSoldierClass;
 

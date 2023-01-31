@@ -28,34 +28,6 @@ AMultiplayerFPSGameModeBase::AMultiplayerFPSGameModeBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AMultiplayerFPSGameModeBase::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AMultiplayerFPSGameModeBase::Tick(float dt)
-{
-	Super::Tick(dt);
-
-	if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
-	{
-		AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
-
-		for (auto PlayerController : PlayersLoggedIn)
-		{
-			SpawnPlayerTest(PlayerController);
-		}
-
-		for (auto PlayerController : PlayersLoggedIn)
-		{
-			PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
-		}
-
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
-		HasSpawnedPlayers = true;
-	}
-}
-
 void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerController* AddedPlayerController)
 {
 	if (AddedPlayerController)
@@ -65,6 +37,24 @@ void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerCon
 			PlayersLoggedIn.Add(AddedPlayerController);
 			++CurrentPlayersLoaded;
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
+
+			if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
+			{
+				AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
+
+				for (auto PlayerController : PlayersLoggedIn)
+				{
+					SpawnPlayerTest(PlayerController);
+				}
+
+				for (auto PlayerController : PlayersLoggedIn)
+				{
+					PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
+				}
+
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
+				HasSpawnedPlayers = true;
+			}
 		}
 	}
 }
