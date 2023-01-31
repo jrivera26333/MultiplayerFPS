@@ -7,15 +7,6 @@
 #include "Net/UnrealNetwork.h"
 #include "MultiplayerFPSGameModeBase.h"
 
-void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
-{
-	if (PlayerMenu != nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu Refreshed")));
-		PlayerMenu->SetupPlayersUI();
-	}
-}
-
 void AFPSPlayerController::PostSeamlessTravel()
 {
 	Super::PostSeamlessTravel();
@@ -77,6 +68,15 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 	if (PlayerMenu != nullptr)
 	{
 		PlayerMenu->SetScoreboardVisibility(true);
+	}
+}
+
+//Called from GameMode
+void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
+{
+	if (PlayerMenu != nullptr)
+	{
+		PlayerMenu->SetupPlayersUI();
 	}
 }
 
