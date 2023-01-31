@@ -75,8 +75,8 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 //Called from GameMode. TODO: Refactor and duplicate 
 void AFPSPlayerController::ClientUpdatePlayersUI_Implementation(const TArray<APlayerState*>& PlayerStateArray)
 {
-	//TODO: Refactor currently looking for two Players so did a valid index of 1
-	if (PlayerMenu != nullptr && PlayerStateArray.IsValidIndex(1))
+	//TODO: Refactor
+	if (PlayerMenu != nullptr)
 	{
 		PlayerMenu->SetupPlayersUI(PlayerStateArray);
 	}
