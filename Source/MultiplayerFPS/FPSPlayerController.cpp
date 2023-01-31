@@ -12,6 +12,8 @@ void AFPSPlayerController::PostSeamlessTravel()
 {
 	Super::PostSeamlessTravel();
 
+	if (!IsLocalController()) return;
+
 	//Updating GM we have loaded into the level
 	AMultiplayerFPSGameModeBase* FPSGameMode = (AMultiplayerFPSGameModeBase*)GetWorld()->GetAuthGameMode();
 
@@ -43,7 +45,6 @@ void AFPSPlayerController::CreatePlayerMenuWidget_Implementation()
 	//This is a check for when we are the client and we are creating a PC on the server
 	if (!IsLocalController() || PlayerMenuClass == nullptr) return;
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player Menu Widget Created. Controller: %s"),*this->GetName()));
 	PlayerMenu = CreateWidget<UPlayerMenu>(this, PlayerMenuClass);
 
 	if (PlayerMenu != nullptr)
@@ -75,6 +76,13 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 //Called from GameMode. TODO: Refactor and duplicate 
 void AFPSPlayerController::ClientUpdatePlayersUI_Implementation(const TArray<APlayerState*>& PlayerStateArray)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Player State Amount: %s"), *FString::FromInt(PlayerStateArray.Num())));
+
+	for (auto index : PlayerStateArray)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Names: %s"), *PlayerStateArray[0]->GetPlayerName()));
+	}
+
 	//TODO: Refactor
 	if (PlayerMenu != nullptr)
 	{

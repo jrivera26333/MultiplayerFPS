@@ -37,23 +37,23 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 {
 	Super::Tick(dt);
 
-	if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
-	{
-		AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
+	//if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
+	//{
+	//	AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
 
-		for (auto PlayerController : PlayersLoggedIn)
-		{
-			SpawnPlayerTest(PlayerController);
-		}
+	//	for (auto PlayerController : PlayersLoggedIn)
+	//	{
+	//		SpawnPlayerTest(PlayerController);
+	//	}
 
-		for (auto PlayerController : PlayersLoggedIn)
-		{
-			PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
-		}
+	//	for (auto PlayerController : PlayersLoggedIn)
+	//	{
+	//		PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
+	//	}
 
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
-		HasSpawnedPlayers = true;
-	}
+	//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
+	//	HasSpawnedPlayers = true;
+	//}
 }
 
 void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerController* AddedPlayerController)
@@ -65,6 +65,24 @@ void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerCon
 			PlayersLoggedIn.Add(AddedPlayerController);
 			++CurrentPlayersLoaded;
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
+
+			if (CurrentPlayersLoaded >= MAX_PLAYERS_IN_LOBBY && !HasSpawnedPlayers)
+			{
+				AFPSGameState* FPSGameState = GetWorld()->GetGameState<AFPSGameState>();
+
+				for (auto PlayerController : PlayersLoggedIn)
+				{
+					SpawnPlayerTest(PlayerController);
+				}
+
+				for (auto PlayerController : PlayersLoggedIn)
+				{
+					PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
+				}
+
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
+				HasSpawnedPlayers = true;
+			}
 		}
 	}
 }
@@ -87,15 +105,11 @@ void AMultiplayerFPSGameModeBase::SpawnPlayerTest(AFPSPlayerController* PlayerCo
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	//auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(AFPSMachineGunSoldier::StaticClass(), PlayerStarts[0]->GetActorTransform());
 	auto Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, SpawnParams);
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
 	PlayerController->CreatePlayerMenuWidget();
-
-	//FString ServerName = GetWorld()->IsServer() ? "Server" : "Client";
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Character Spawned %s: %s"), *ServerName, *PlayerController->GetName()));
 }
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
