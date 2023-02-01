@@ -32,6 +32,8 @@ UMultiplayerFPSGameInstance::UMultiplayerFPSGameInstance(const FObjectInitialize
 //All Clients have a GameInstance often used for persistent data
 void UMultiplayerFPSGameInstance::Init()
 {
+	Super::Init();
+
 	//Getting the current Subsystem. (Null by default unless specified in the DefaultEngine.ini file
 	static IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	if (Subsystem != nullptr)

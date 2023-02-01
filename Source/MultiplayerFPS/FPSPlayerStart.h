@@ -13,4 +13,15 @@ UCLASS()
 class MULTIPLAYERFPS_API AFPSPlayerStart : public APlayerStart
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	bool IsStartingSpawnPos;
+
+	bool HasBeenTaken;
+
+	bool GetIsStartingSpawnPos() { return IsStartingSpawnPos; };
+
+	bool GetHasBeenTakenSpawnPos() { return HasBeenTaken; };
+	void SetHasBeenTakenSpawnPos(bool IsTaken) { HasBeenTaken = IsTaken; };
 };

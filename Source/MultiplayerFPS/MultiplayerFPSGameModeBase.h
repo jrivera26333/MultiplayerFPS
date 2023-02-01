@@ -26,7 +26,6 @@ protected:
 
 	virtual void HandleMatchHasEnded() override;
 	virtual void HandleMatchHasStarted() override;
-	//virtual void GenericPlayerInitialization(AController* Controller) override;
 
 	virtual bool ReadyToEndMatch_Implementation() override;
 	virtual bool ShouldSpawnAtStartSpot(AController* Player) override;
@@ -34,26 +33,27 @@ protected:
 	//We are traveling from the Lobby so this will fire since we are switching gamemodes
 	virtual void PostSeamlessTravel() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Character Spawns")
+	APlayerStart* P1PlayerStart;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character Spawns")
+	APlayerStart* P2PlayerStart;
 
 public:
 
 	void OnKill(AController* KillerController, AController* VictimController);
-	bool HasWinner() const;
 	void AddToCurrentPlayersLoading(class AFPSPlayerController* PlayerController);
-
-	//Test (place in private)
-	void SpawnPlayerTest(class AFPSPlayerController* PlayerController);
 
 private:
 
 	bool HasStartedTraveling;
 	bool HasSpawnedPlayers;
 
-	void StartGame();
-	void FindPlayerStarts();
-
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
+
+	UPROPERTY()
+	TArray<class AFPSPlayerStart*> CastedPlayerStarts;
 
 	UPROPERTY()
 	TArray<class AFPSPlayerController*> PlayersLoggedIn;
@@ -63,4 +63,8 @@ private:
 
 	uint32 CurrentPlayersLoaded = 0;
 	FTimerHandle GameStartTimer;
+
+	bool HasWinner() const;
+	void FindPlayerStarts();
+	void InitialSpawnPlayer(class AFPSPlayerController* PlayerController);
 };
