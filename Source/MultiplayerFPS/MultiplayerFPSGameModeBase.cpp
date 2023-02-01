@@ -87,7 +87,7 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 		{
 			CachedPlayerStartPos = StartPos;
 			CachedPlayerStartPos->SetHasBeenTakenSpawnPos(true);
-			return;
+			break;
 		}
 	}
 
