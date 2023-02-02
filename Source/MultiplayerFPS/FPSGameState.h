@@ -16,11 +16,8 @@ protected:
 
 public:
 
-	void UpdatePlayerScores();
-
 	UFUNCTION(BlueprintCallable)
 	TArray<class AFPSPlayerState*> GetPlayerStatesOrderedByKills();
-
 
 	void SetKillLimit(int32 NewKillLimit) { KillLimit = NewKillLimit; }
 };

@@ -9,26 +9,3 @@ void AFPSPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& Ou
 	DOREPLIFETIME(AFPSPlayerState, Kills);
 	DOREPLIFETIME(AFPSPlayerState, Deaths);
 }
-
-void AFPSPlayerState::OnRep_UpdateKillUI()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("OnRep Call")));
-	AFPSPlayerController* Controller = Cast<AFPSPlayerController>(GetNetOwningPlayer());
-
-	if (Controller == nullptr)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Controller was null")));
-		return;
-	}
-
-
-	if (Controller->IsLocalController())
-	{
-		Controller->ClientRefreshKills();
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Refreshed Kills")));
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Did not refresh kills")));
-	}
-}

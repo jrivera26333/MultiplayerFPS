@@ -11,14 +11,11 @@ class MULTIPLAYERFPS_API AFPSPlayerState : public APlayerState
 	
 protected:
 
-	UPROPERTY(ReplicatedUsing = OnRep_UpdateKillUI)
+	UPROPERTY(Replicated)
 	int32 Kills = 0;
 
 	UPROPERTY(Replicated)
 	int32 Deaths = 0;
-
-	UFUNCTION()
-	void OnRep_UpdateKillUI();
 
 public:
 
