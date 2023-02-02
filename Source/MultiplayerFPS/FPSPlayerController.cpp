@@ -110,6 +110,6 @@ void AFPSPlayerController::RefreshKills()
 {
 	if (PlayerMenu != nullptr)
 	{
-		PlayerMenu->SetupPlayersUI();
+		PlayerMenu->RefreshKillsUI();
 	}
 }

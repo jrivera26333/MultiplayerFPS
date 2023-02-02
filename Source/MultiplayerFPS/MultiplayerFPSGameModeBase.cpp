@@ -289,7 +289,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 			else
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Respawned Players null"), *FString::FromInt(NumTravellingPlayers)));
 
-			AFPSPlayerController* VictimFPSController = Cast<AFPSPlayerController>(VictimController);
 			RespawnPlayer(VictimFPSController);
 		}
 	}	
