@@ -97,10 +97,7 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 		return;
 	}
 
-	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CachedPlayerStartPos->GetActorLocation(), FRotator::ZeroRotator, SpawnParams);
-	Character->SetActorRotation(CachedPlayerStartPos->GetActorRotation());
-
-	//AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CachedPlayerStartPos->GetTransform(), SpawnParams);
+	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CachedPlayerStartPos->GetTransform(), SpawnParams);
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
