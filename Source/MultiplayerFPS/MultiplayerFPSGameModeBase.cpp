@@ -237,7 +237,7 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 
 	// Add kill to the killer
 
-	if (KillerController != nullptr && KillerController != VictimController)
+	if (KillerController != nullptr)
 	{
 		AFPSPlayerState* KillerPlayerState = Cast<AFPSPlayerState>(KillerController->PlayerState);
 

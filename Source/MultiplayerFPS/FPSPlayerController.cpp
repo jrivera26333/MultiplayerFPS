@@ -84,6 +84,7 @@ void AFPSPlayerController::ClientRefreshKills_Implementation()
 {
 	if (PlayerMenu != nullptr)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Refreshed Kills for %s"),*this->GetName()));
 		PlayerMenu->RefreshKillsUI();
 	}
 }
