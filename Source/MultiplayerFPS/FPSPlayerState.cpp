@@ -12,9 +12,15 @@ void AFPSPlayerState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& Ou
 
 void AFPSPlayerState::OnRep_UpdateKillUI()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("OnRep Call")));
 	AFPSPlayerController* Controller = Cast<AFPSPlayerController>(GetNetOwningPlayer());
 
-	if (Controller == nullptr) return;
+	if (Controller == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Controller was null")));
+		return;
+	}
+
 
 	if (Controller->IsLocalController())
 	{

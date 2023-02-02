@@ -14,7 +14,7 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_UpdateKillUI)
 	int32 Kills = 0;
 
-	UPROPERTY(ReplicatedUsing = OnRep_UpdateKillUI)
+	UPROPERTY(Replicated)
 	int32 Deaths = 0;
 
 	UFUNCTION()
