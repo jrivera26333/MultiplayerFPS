@@ -234,11 +234,9 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 	{
 		return;
 	}
-	AFPSPlayerController* KillerFPSController = Cast<AFPSPlayerController>(KillerController);
-	KillerFPSController->RefreshKills();
 
+	AFPSPlayerController* KillerFPSController = Cast<AFPSPlayerController>(KillerController);
 	AFPSPlayerController* VictimFPSController = Cast<AFPSPlayerController>(VictimController);
-	VictimFPSController->RefreshKills();
 
 	// Add kill to the killer
 
@@ -292,4 +290,7 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 			RespawnPlayer(VictimFPSController);
 		}
 	}	
+
+	KillerFPSController->RefreshKills();
+	VictimFPSController->RefreshKills();
 }
