@@ -14,14 +14,13 @@ protected:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "FPS Game State")
 	int32 KillLimit;
 
-	virtual void PostInitializeComponents() override;
-
 public:
 
-	//Referenced in Widget
-	UFUNCTION(BlueprintCallable)
-	TArray<class AFPSPlayerState*> GetPlayerStatesOrderedByKills() const;
+	void UpdatePlayerScores();
 
-	TArray<FString> PlayerNames[2];
+	UFUNCTION(BlueprintCallable)
+	TArray<class AFPSPlayerState*> GetPlayerStatesOrderedByKills();
+
+
 	void SetKillLimit(int32 NewKillLimit) { KillLimit = NewKillLimit; }
 };

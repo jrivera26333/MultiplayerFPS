@@ -67,4 +67,5 @@ private:
 	bool HasWinner() const;
 	void FindPlayerStarts();
 	void InitialSpawnPlayer(class AFPSPlayerController* PlayerController);
+	void RespawnPlayer(class AFPSPlayerController* PlayerController);
 };

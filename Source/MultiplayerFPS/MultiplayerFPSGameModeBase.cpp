@@ -104,6 +104,26 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 	PlayerController->CreatePlayerMenuWidget();
 }
 
+void AMultiplayerFPSGameModeBase::RespawnPlayer(AFPSPlayerController* PlayerController)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned")));
+	if (PlayerController == nullptr) return;
+
+	APawn* PlayerFPSPawn = PlayerController->GetPawn();
+
+	if (PlayerFPSPawn)
+		PlayerFPSPawn->Destroy();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CastedPlayerStarts[FMath::RandRange(0, CastedPlayerStarts.Num() -1)]->GetTransform(), SpawnParams);
+	PlayerController->Possess(Character);
+
+	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
+	PlayerController->CreatePlayerMenuWidget();
+}
+
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 {
 	TSubclassOf<AFPSPlayerStart> PlayerStartClass = AFPSPlayerStart::StaticClass();
@@ -214,6 +234,11 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 	{
 		return;
 	}
+	AFPSPlayerController* KillerFPSController = Cast<AFPSPlayerController>(KillerController);
+	KillerFPSController->RefreshKills();
+
+	AFPSPlayerController* VictimFPSController = Cast<AFPSPlayerController>(VictimController);
+	VictimFPSController->RefreshKills();
 
 	// Add kill to the killer
 
@@ -228,8 +253,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		}
 
 		// Show the kill on the killer's HUD
-
-		AFPSPlayerController* KillerFPSController = Cast<AFPSPlayerController>(KillerController);
 
 		if (KillerFPSController != nullptr && VictimController != nullptr && VictimController->PlayerState != nullptr)
 		{
@@ -257,8 +280,17 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 
 		if (!HasWinner())
 		{
-			int32 RandomIndex = FMath::RandRange(0, PlayerStarts.Num() - 1);
-			RestartPlayerAtPlayerStart(VictimController, PlayerStarts[RandomIndex]);
+			int32 RandomIndex = FMath::RandRange(0, CastedPlayerStarts.Num() - 1);
+
+			if (CastedPlayerStarts[RandomIndex])
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Respawned Players"), *FString::FromInt(NumTravellingPlayers)));
+			}
+			else
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Respawned Players null"), *FString::FromInt(NumTravellingPlayers)));
+
+			AFPSPlayerController* VictimFPSController = Cast<AFPSPlayerController>(VictimController);
+			RespawnPlayer(VictimFPSController);
 		}
 	}	
 }

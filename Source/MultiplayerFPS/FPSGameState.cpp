@@ -2,11 +2,6 @@
 #include "Net/UnrealNetwork.h"
 #include "FPSPlayerState.h"
 
-void AFPSGameState::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Post Init")));
-}
 
 void AFPSGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
@@ -15,7 +10,7 @@ void AFPSGameState::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 	DOREPLIFETIME(AFPSGameState, KillLimit);
 }
 
-TArray<AFPSPlayerState*> AFPSGameState::GetPlayerStatesOrderedByKills() const
+TArray<AFPSPlayerState*> AFPSGameState::GetPlayerStatesOrderedByKills()
 {
 	TArray<AFPSPlayerState*> PlayerStates;
 

@@ -58,6 +58,7 @@ public:
 	UFUNCTION(Client, Reliable)
 	void CreatePlayerMenuWidget();
 
+	void RefreshKills();
 	void AddAbilityPortraits();
 	void AddWeaponPortrait();
 

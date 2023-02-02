@@ -105,3 +105,11 @@ void AFPSPlayerController::OwningClientPlaySound(USoundBase* Sound)
 	if(IsLocalController())
 		ClientPlaySound(Sound);
 }
+
+void AFPSPlayerController::RefreshKills()
+{
+	if (PlayerMenu != nullptr)
+	{
+		PlayerMenu->SetupPlayersUI();
+	}
+}
