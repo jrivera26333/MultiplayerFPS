@@ -19,8 +19,9 @@ protected:
 
 public:
 
-	void AddKill() { Kills++; }
-	void AddDeath() { Deaths++; }
+	void AddKill() { ++Kills; }
+	void AddDeath() { ++Deaths; }
 
+	UFUNCTION(BlueprintCallable)
 	int32 GetKills() const { return Kills; }
 };
