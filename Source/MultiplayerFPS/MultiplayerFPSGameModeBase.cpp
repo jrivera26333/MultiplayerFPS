@@ -119,9 +119,6 @@ void AMultiplayerFPSGameModeBase::RespawnPlayer(AFPSPlayerController* PlayerCont
 
 	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CastedPlayerStarts[FMath::RandRange(0, CastedPlayerStarts.Num() -1)]->GetTransform(), SpawnParams);
 	PlayerController->Possess(Character);
-
-	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
-	PlayerController->CreatePlayerMenuWidget();
 }
 
 void AMultiplayerFPSGameModeBase::FindPlayerStarts()
@@ -279,14 +276,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		if (!HasWinner())
 		{
 			int32 RandomIndex = FMath::RandRange(0, CastedPlayerStarts.Num() - 1);
-
-			if (CastedPlayerStarts[RandomIndex])
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Respawned Players"), *FString::FromInt(NumTravellingPlayers)));
-			}
-			else
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Respawned Players null"), *FString::FromInt(NumTravellingPlayers)));
-
 			RespawnPlayer(VictimFPSController);
 		}
 	}	
