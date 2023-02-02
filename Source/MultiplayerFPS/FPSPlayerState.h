@@ -11,11 +11,14 @@ class MULTIPLAYERFPS_API AFPSPlayerState : public APlayerState
 	
 protected:
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "FPS Player State")
+	UPROPERTY(ReplicatedUsing = OnRep_UpdateKillUI)
 	int32 Kills = 0;
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "FPS Player State")
 	int32 Deaths = 0;
+
+	UFUNCTION()
+	void OnRep_UpdateKillUI();
 
 public:
 

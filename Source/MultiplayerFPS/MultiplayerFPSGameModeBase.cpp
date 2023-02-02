@@ -280,6 +280,6 @@ void AMultiplayerFPSGameModeBase::OnKill(AController* KillerController, AControl
 		}
 	}	
 
-	KillerFPSController->ClientRefreshKills();
-	VictimFPSController->ClientRefreshKills();
+	//KillerFPSController->ClientRefreshKills();
+	//VictimFPSController->ClientRefreshKills();
 }
