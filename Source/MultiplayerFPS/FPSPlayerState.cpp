@@ -14,6 +14,8 @@ void AFPSPlayerState::OnRep_UpdateKillUI()
 {
 	AFPSPlayerController* Controller = Cast<AFPSPlayerController>(GetNetOwningPlayer());
 
+	if (Controller == nullptr) return;
+
 	if (Controller->IsLocalController())
 	{
 		Controller->ClientRefreshKills();

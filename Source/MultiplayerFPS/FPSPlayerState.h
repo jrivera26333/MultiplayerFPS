@@ -14,7 +14,7 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_UpdateKillUI)
 	int32 Kills = 0;
 
-	UPROPERTY(Replicated, BlueprintReadOnly, Category = "FPS Player State")
+	UPROPERTY(ReplicatedUsing = OnRep_UpdateKillUI)
 	int32 Deaths = 0;
 
 	UFUNCTION()
