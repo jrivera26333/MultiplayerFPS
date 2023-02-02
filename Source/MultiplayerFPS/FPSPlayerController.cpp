@@ -80,6 +80,14 @@ void AFPSPlayerController::ClientUpdatePlayersUI_Implementation(const TArray<APl
 	}
 }
 
+void AFPSPlayerController::ClientRefreshKills_Implementation()
+{
+	if (PlayerMenu != nullptr)
+	{
+		PlayerMenu->RefreshKillsUI();
+	}
+}
+
 void AFPSPlayerController::AddAbilityPortraits()
 {
 	if (Abilities.Num() > 0)
@@ -104,12 +112,4 @@ void AFPSPlayerController::OwningClientPlaySound(USoundBase* Sound)
 {
 	if(IsLocalController())
 		ClientPlaySound(Sound);
-}
-
-void AFPSPlayerController::RefreshKills()
-{
-	if (PlayerMenu != nullptr)
-	{
-		PlayerMenu->RefreshKillsUI();
-	}
 }
