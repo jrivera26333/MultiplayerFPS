@@ -45,25 +45,28 @@ public:
 	void ToggleScoreboard();
 	void OpenSettingsMenu();
 
-	//PlayerController and Widgets should communicate to each other so client communication is prefered
-	UFUNCTION(Client, Reliable)
-	void ClientNotifyKill(const FString& Name);	
-
-	UFUNCTION(Client, Reliable)
-	void ClientShowScoreboard();
-
-	UFUNCTION(Client, Reliable)
-	void ClientUpdatePlayersUI(const TArray<APlayerState*>& PlayerStateArray);
-
-	UFUNCTION(Client, Reliable)
-	void CreatePlayerMenuWidget();
-
-	UFUNCTION(Client, Reliable)
-	void ClientRefreshKills();
-
 	void AddAbilityPortraits();
 	void AddWeaponPortrait();
 
 	UFUNCTION(BlueprintCallable)
 	void OwningClientPlaySound(USoundBase* Sound);
+
+	//RPC's
+	UFUNCTION(Client, Reliable)
+	void ClientNotifyKill(const FString& Name);
+
+	UFUNCTION(Client, Reliable)
+	void ClientUpdateKillsTarget(const FString& Name);
+
+	UFUNCTION(Client, Reliable)
+	void ClientShowScoreboard();
+
+	UFUNCTION(Client, Reliable)
+	void ClientUpdatePlayersUI();
+
+	UFUNCTION(Client, Reliable)
+	void ClientCreatePlayerMenuWidget();
+
+	UFUNCTION(Client, Reliable)
+	void ClientRefreshKills();
 };

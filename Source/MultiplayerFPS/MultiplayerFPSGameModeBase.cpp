@@ -38,7 +38,7 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 
 		for (auto PlayerController : PlayersLoggedIn)
 		{
-			PlayerController->ClientUpdatePlayersUI(FPSGameState->PlayerArray);
+			PlayerController->ClientUpdatePlayersUI();
 		}
 
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
@@ -101,7 +101,8 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
-	PlayerController->CreatePlayerMenuWidget();
+	PlayerController->ClientCreatePlayerMenuWidget();
+	PlayerController->ClientUpdateKillsTarget(FString::FromInt(KillLimit));
 }
 
 void AMultiplayerFPSGameModeBase::RespawnPlayer(AFPSPlayerController* PlayerController)

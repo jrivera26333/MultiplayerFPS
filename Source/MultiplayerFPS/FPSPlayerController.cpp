@@ -38,7 +38,7 @@ void AFPSPlayerController::OpenSettingsMenu()
 }
 
 //Called from GameMode
-void AFPSPlayerController::CreatePlayerMenuWidget_Implementation()
+void AFPSPlayerController::ClientCreatePlayerMenuWidget_Implementation()
 {
 	//This is a check for when we are the client and we are creating a PC on the server
 	if (!IsLocalController() || PlayerMenuClass == nullptr) return;
@@ -63,6 +63,15 @@ void AFPSPlayerController::ClientNotifyKill_Implementation(const FString& Name)
 }
 
 //Called from GameMode
+void AFPSPlayerController::ClientUpdateKillsTarget_Implementation(const FString& KillsTarget)
+{
+	if (PlayerMenu != nullptr)
+	{
+		PlayerMenu->UpdateKillsTarget(KillsTarget);
+	}
+}
+
+//Called from GameMode
 void AFPSPlayerController::ClientShowScoreboard_Implementation()
 {
 	if (PlayerMenu != nullptr)
@@ -71,8 +80,8 @@ void AFPSPlayerController::ClientShowScoreboard_Implementation()
 	}
 }
 
-//Called from GameMode. TODO: Refactor and duplicate 
-void AFPSPlayerController::ClientUpdatePlayersUI_Implementation(const TArray<APlayerState*>& PlayerStateArray)
+//Called from GameMode
+void AFPSPlayerController::ClientUpdatePlayersUI_Implementation()
 {
 	if (PlayerMenu != nullptr)
 	{

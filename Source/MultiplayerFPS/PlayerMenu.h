@@ -30,6 +30,9 @@ public:
 	void NotifyKill(const FString& Name);
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateKillsTarget(const FString& Name);
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void SetAbilityIcons(FString const& AbilityInput, UTexture2D* const& AbilityTexture);
 
 	UFUNCTION(BlueprintImplementableEvent)
