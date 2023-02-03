@@ -28,6 +28,7 @@ protected:
 private:
 
 	FTimerHandle FireTimer;
+
 	void Sprint();
 
 	bool IsSprinting = false;

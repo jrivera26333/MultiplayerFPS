@@ -78,8 +78,6 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	AFPSPlayerStart* CachedPlayerStartPos = nullptr;
-
 	//Must have 2 starting positions set in editor
 	for (auto StartPos : CastedPlayerStarts)
 	{
@@ -97,7 +95,9 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 		return;
 	}
 
-	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CachedPlayerStartPos->GetTransform(), SpawnParams);
+	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CachedPlayerStartPos->GetActorTransform(), SpawnParams);
+	Character->SetActorRotation(CachedPlayerStartPos->GetActorRotation());
+
 	PlayerController->Possess(Character);
 
 	//The transition level UI lingers so when we spawn our Player Character we will transition into the GamePlay UI. BeginPlay on FPSPlayerController is to soon!
@@ -117,7 +117,16 @@ void AMultiplayerFPSGameModeBase::RespawnPlayer(AFPSPlayerController* PlayerCont
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CastedPlayerStarts[FMath::RandRange(0, CastedPlayerStarts.Num() -1)]->GetTransform(), SpawnParams);
+	AFPSPlayerStart* SpawnPoint = CastedPlayerStarts[FMath::RandRange(0, CastedPlayerStarts.Num() - 1)];
+
+	while (SpawnPoint->IsStartingSpawnPos && SpawnPoint == CachedPlayerStartPos)
+	{
+		SpawnPoint = CastedPlayerStarts[FMath::RandRange(0, CastedPlayerStarts.Num() - 1)];
+	}
+
+	CachedPlayerStartPos = SpawnPoint;
+
+	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, SpawnPoint->GetTransform(), SpawnParams);
 	PlayerController->Possess(Character);
 }
 

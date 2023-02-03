@@ -43,11 +43,14 @@ public:
 
 	void OnKill(AController* KillerController, AController* VictimController);
 	void AddToCurrentPlayersLoading(class AFPSPlayerController* PlayerController);
+	int32 GetKillLimit() const { return KillLimit; };
 
 private:
 
-	bool HasStartedTraveling;
 	bool HasSpawnedPlayers;
+	bool HasStartedTraveling;
+
+	class AFPSPlayerStart* CachedPlayerStartPos = nullptr;
 
 	UPROPERTY()
 	TArray<AActor*> PlayerStarts;
