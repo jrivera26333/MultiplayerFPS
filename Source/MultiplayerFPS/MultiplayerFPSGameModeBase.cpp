@@ -41,7 +41,6 @@ void AMultiplayerFPSGameModeBase::Tick(float dt)
 			PlayerController->ClientUpdatePlayersUI();
 		}
 
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned Players"), *FString::FromInt(NumTravellingPlayers)));
 		HasSpawnedPlayers = true;
 	}
 }
@@ -54,7 +53,6 @@ void AMultiplayerFPSGameModeBase::AddToCurrentPlayersLoading(class AFPSPlayerCon
 		{
 			PlayersLoggedIn.Add(AddedPlayerController);
 			++CurrentPlayersLoaded;
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Added")));
 		}
 	}
 }
@@ -67,7 +65,6 @@ void AMultiplayerFPSGameModeBase::PostSeamlessTravel()
 
 void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* PlayerController)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned")));
 	if (PlayerController == nullptr) return;
 
 	APawn* PlayerFPSPawn = PlayerController->GetPawn();
@@ -89,11 +86,7 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 		}
 	}
 
-	if (!CachedPlayerStartPos)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawn not found!")));
-		return;
-	}
+	if (!CachedPlayerStartPos) return;
 
 	AFPSMachineGunSoldier* Character = GetWorld()->SpawnActor<AFPSMachineGunSoldier>(MachineGunSoldierClass, CachedPlayerStartPos->GetActorTransform(), SpawnParams);
 	Character->SetActorRotation(CachedPlayerStartPos->GetActorRotation());
@@ -107,7 +100,6 @@ void AMultiplayerFPSGameModeBase::InitialSpawnPlayer(AFPSPlayerController* Playe
 
 void AMultiplayerFPSGameModeBase::RespawnPlayer(AFPSPlayerController* PlayerController)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Spawned")));
 	if (PlayerController == nullptr) return;
 
 	APawn* PlayerFPSPawn = PlayerController->GetPawn();
@@ -141,8 +133,6 @@ void AMultiplayerFPSGameModeBase::FindPlayerStarts()
 		AFPSPlayerStart* CastedStart = static_cast<AFPSPlayerStart*>(Actor);
 		CastedPlayerStarts.Add(CastedStart);
 	}
-
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("CastedPlayerStarts Found: %s"),*FString::FromInt(CastedPlayerStarts.Num())));
 }
 
 bool AMultiplayerFPSGameModeBase::ShouldSpawnAtStartSpot(AController* Player)
